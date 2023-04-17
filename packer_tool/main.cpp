@@ -6,6 +6,7 @@ extern "C" {
 #endif 
 
 #include <filesystem>
+#include <fstream>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -52,11 +53,27 @@ int main()
 			_first_entry = "E:\\database\\test";
 			char* internal_filepath = filesystem_tree_file_path(next_directory, next_file);
 			_first_entry = std::filesystem::weakly_canonical(_first_entry / internal_filepath);
-			free(internal_filepath);
 
 			if (!std::filesystem::exists(_first_entry.parent_path()))
 				std::filesystem::create_directories(_first_entry);
 
+			auto* infile = gpak_fopen(pPak, internal_filepath);
+
+			std::ofstream outfile(_first_entry);
+
+			//char buffer[2048];
+			//size_t readed{ 0ull }; size_t whole_readed{ 0ull };
+			//do {
+			//	readed = gpak_fread(buffer, 1ull, 2048ull, infile);
+			//	outfile.write(buffer, readed);
+			//	whole_readed += readed;
+			//} while (readed != 0ull);
+
+			outfile.write(infile->data_, infile->end_ - infile->begin_);
+
+			outfile.close();
+			gpak_fclose(infile);
+			free(internal_filepath);
 			// get file pointer
 			// write to file
 		}

@@ -192,13 +192,13 @@ filesystem_tree_file_t* filesystem_tree_find_file(filesystem_tree_node_t* _root,
     char* file_name = NULL;
 
     filesystem_tree_node_t* current = _root;
-    while (dir_name) 
+    while (dir_name)
     {
         file_name = strtok(NULL, "/");
-        if (file_name) 
+        if (file_name)
         {
             filesystem_tree_node_t* found = _find_directory(current, dir_name);
-            if (!found) 
+            if (!found)
             {
                 free(dir_path);
                 return NULL;
@@ -208,12 +208,12 @@ filesystem_tree_file_t* filesystem_tree_find_file(filesystem_tree_node_t* _root,
             dir_name = strtok(NULL, "/");
         }
         else
-            file_name = dir_name;
+            break;
     }
 
     filesystem_tree_file_t* file = NULL;
-    if (file_name)
-        file = _find_file(current, file_name);
+    if (dir_name && !file_name)
+        file = _find_file(current, dir_name);
 
     free(dir_path);
     return file;

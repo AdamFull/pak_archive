@@ -56,14 +56,8 @@ int _pak_read_single(gpak_t* _pak, void* _data, size_t _size)
 
 	size_t _res = fread(_data, _size, 1ull, _pak->stream_);
 
-	int _error = ferror(_pak->stream_);
 	if (_res * _size != _size)
-	{
-		if (_error = 0)
-			return GPAK_ERROR_OK;
 		return GPAK_ERROR_READ;
-	}
-		
 
 	return GPAK_ERROR_OK;
 }
@@ -236,7 +230,7 @@ int _gpak_add_file_uncompressed(gpak_t* _pak, const char* _path)
 		return GPAK_ERROR_OPEN_FILE;
 
 	// Add stream encryprion and stream compressing here
-	char _buffer[131072];
+	char _buffer[16384];
 	size_t _readed = 0ull;
 
 	do
@@ -307,11 +301,7 @@ int _gpak_parse_file_tree(gpak_t* _pak)
 		pak_entry_t _entry;
 		int _res = _pak_read_single(_pak, &_entry, sizeof(pak_entry_t));
 		if (_res != GPAK_ERROR_OK)
-		{
-			_pak->last_error_ = _res;
-			_gpak_seek(_pak, 0l, SEEK_END);
-			return _pak->last_error_;
-		}
+			break;	// EOF
 
 		size_t _size = 0ull;
 		if (_entry.uncompressed_size_ == _entry.compressed_size_)
@@ -322,9 +312,6 @@ int _gpak_parse_file_tree(gpak_t* _pak)
 		filesystem_tree_add_file(_pak->root_, _entry.name, NULL, _gpak_tell(_pak), _size);
 
 		_gpak_seek(_pak, _size, SEEK_CUR);
-
-		if (feof(_pak->stream_))
-			break;
 	}
 
 	return GPAK_ERROR_OK;
@@ -496,4 +483,126 @@ filesystem_tree_file_t* gpak_find_file(gpak_t* _pak, const char* _path)
 		return NULL;
 
 	return filesystem_tree_find_file(_pak->root_, _path);
+}
+
+gpak_file_t* gpak_fopen(gpak_t* _pak, const char* _path)
+{
+	filesystem_tree_file_t* _file_info = filesystem_tree_find_file(_pak->root_, _path);
+	if (!_file_info)
+	{
+		_pak->last_error_ = GPAK_ERROR_FILE_NOT_FOUND;
+		return NULL;
+	}
+
+	gpak_file_t* mfile = (gpak_file_t*)malloc(sizeof(gpak_file_t));
+	mfile->data_ = (char*)malloc(_file_info->size_ + 1);
+	//mfile->data_[_file_info->size_] = '\0';
+
+	// Setting position to file start
+	_gpak_seek(_pak, _file_info->offset_, SEEK_SET);
+
+	size_t bytes_read = fread(mfile->data_, 1ull, _file_info->size_, _pak->stream_);
+	if (bytes_read != _file_info->size_) 
+	{
+		free(mfile->data_);
+		free(mfile);
+		return NULL;
+	}
+
+	mfile->begin_ = mfile->current_ = mfile->data_;
+	mfile->end_ = mfile->data_ + _file_info->size_;
+	mfile->ungetc_buffer_ = EOF;
+
+	return mfile;
+}
+
+int gpak_fgetc(gpak_file_t* _file)
+{
+	if (_file->ungetc_buffer_ != EOF)
+	{
+		int result = _file->ungetc_buffer_;
+		_file->ungetc_buffer_ = EOF;
+		return result;
+	}
+
+	if (_file->current_ >= _file->end_)
+		return EOF;
+
+	return (int)(*_file->current_++);
+}
+
+char* gpak_fgets(gpak_file_t* _file, char* _buffer, int _max)
+{
+	if (_file->current_ >= _file->end_)
+		return NULL;
+
+	int i = 0;
+	while (i < _max - 1)
+	{
+		auto c = gpak_fgetc(_file);
+		if (c == EOF)
+			break;
+
+		_buffer[i++] = (char)c;
+		if (c == '\n')
+			break;
+	}
+
+	_buffer[i] = '\0';
+	return _buffer;
+}
+
+int gpak_ungetc(gpak_file_t* _file, int _character)
+{
+	if (_file->ungetc_buffer_ != EOF || _file->current_ <= _file->end_)
+		return EOF;
+
+	_file->ungetc_buffer_ = _character;
+	return _character;
+}
+
+size_t gpak_fread(void* _buffer, size_t _elemSize, size_t _elemCount, gpak_file_t* _file)
+{
+	size_t n = _elemSize * _elemCount;
+	if (n > (size_t)(_file->end_ - _file->current_))
+		n = _file->end_ - _file->current_;
+
+	memcpy(_buffer, _file->current_, n);
+	_file->current_ += n;
+	return n / _elemSize;
+}
+
+long gpak_ftell(gpak_file_t* _file)
+{
+	return (long)(_file->current_ - _file->begin_);
+}
+
+long gpak_fseek(gpak_file_t* _file, long _offset, int _origin)
+{
+	const char* new_current;
+
+	switch (_origin)
+	{
+	case SEEK_SET: new_current = _file->begin_ + _offset; break;
+	case SEEK_CUR: new_current = _file->current_ + _offset; break;
+	case SEEK_END: new_current = _file->end_ + _offset; break;
+	default: return -1;
+	}
+
+	if (new_current < _file->begin_ || new_current > _file->end_)
+		return -1;
+
+	_file->current_ = new_current;
+	return 0;
+}
+
+long gpak_feof(gpak_file_t* _file)
+{
+	return _file->current_ >= _file->end_;
+}
+
+void gpak_fclose(gpak_file_t* _file)
+{
+	free(_file->data_);
+	free(_file);
 }

@@ -67,7 +67,8 @@ extern "C" {
 		GPAK_ERROR_INCORRECT_HEADER = -4,
 		GPAK_ERROR_OPEN_FILE = -5,
 		GPAK_ERROR_WRITE = -6,
-		GPAK_ERROR_READ = -7
+		GPAK_ERROR_READ = -7,
+		GPAK_ERROR_FILE_NOT_FOUND = -8
 	};
 	typedef enum gpak_error gpak_error_t;
 
@@ -91,6 +92,16 @@ extern "C" {
 	};
 	typedef struct gpak gpak_t;
 
+	struct gpak_file
+	{
+		char* data_;
+		const char* begin_;
+		const char* end_;
+		const char* current_;
+		int ungetc_buffer_;
+	};
+	typedef struct gpak_file gpak_file_t;
+
 	gpak_t* gpak_open(const char* _path, int _mode);
 	int gpak_close(gpak_t* _pak);
 
@@ -105,6 +116,17 @@ extern "C" {
 	struct filesystem_tree_node* gpak_get_root(gpak_t* _pak);
 	struct filesystem_tree_node* gpak_find_directory(gpak_t* _pak, const char* _path);
 	struct filesystem_tree_file* gpak_find_file(gpak_t* _pak, const char* _path);
+
+	// File functions
+	gpak_file_t* gpak_fopen(gpak_t* _pak, const char* _path);
+	int gpak_fgetc(gpak_file_t* _file);
+	char* gpak_fgets(gpak_file_t* _file, char* _buffer, int _max);
+	int gpak_ungetc(gpak_file_t* _file, int _character);
+	size_t gpak_fread(void* _buffer, size_t _elemSize, size_t _elemCount, gpak_file_t* _file);
+	long gpak_ftell(gpak_file_t* _file);
+	long gpak_fseek(gpak_file_t* _file, long _offset, int _origin);
+	long gpak_feof(gpak_file_t* _file);
+	void gpak_fclose(gpak_file_t* _file);
 
 #ifdef __cplusplus
 }
