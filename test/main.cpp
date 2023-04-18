@@ -8,10 +8,68 @@ extern "C" {
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
+#include <algorithm>
+#include <string>
+#include <iostream>
+#include <queue>
+
+void charSort(std::string& str)
+{
+    const std::string vowelsList{ 'a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O','U','Y' };
+    std::queue<char> vowels;
+    std::queue<char> consonants;
+
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        if (vowelsList.find(str[i]) != std::string::npos)
+        {
+            vowels.push(str[i]);
+        }
+        else
+        {
+            consonants.push(str[i]);
+        }
+    }
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        if (vowels.empty())
+        {
+            str[i] = consonants.front();
+            consonants.pop();
+
+        }
+        else if (consonants.empty())
+        {
+            str[i] = vowels.front();
+            vowels.pop();
+        }
+        else if (!(i % 2))
+        {
+            str[i] = vowels.front();
+            vowels.pop();
+        }
+        else
+        {
+            str[i] = consonants.front();
+            consonants.pop();
+        }
+    }
+}
+
+
 int main() 
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+
+    std::string letters{ "smSMfmSiowlsJSLFkkjhsoyyySjjfoaojfjKSJFWUlnjas" };
+    std::sort(letters.begin(), letters.end(), [](const char a, const char b) { return static_cast<int>(a) > static_cast<int>(b); });
+    std::cout << letters;
+
+    std::string letters_{ "smSMfmSiowlsJSLFkkjhsoyyySjjfoaojfjKSJFWUlnjas" };
+    charSort(letters_);
+    std::cout << letters_;
+
 
     //filesystem_tree_node_t* root = filesystem_tree_create();
     //

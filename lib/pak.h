@@ -68,7 +68,19 @@ extern "C" {
 		GPAK_ERROR_OPEN_FILE = -5,
 		GPAK_ERROR_WRITE = -6,
 		GPAK_ERROR_READ = -7,
-		GPAK_ERROR_FILE_NOT_FOUND = -8
+
+		GPAK_ERROR_FILE_NOT_FOUND = -8,
+
+		// Deflate
+		GPAK_ERROR_DEFLATE_INIT = -9,
+
+		// LZ4 errors
+		GPAK_ERROR_LZ4_WRITE_OPEN = -12,
+		GPAK_ERROR_LZ4_READ_OPEN = -13,
+		GPAK_ERROR_LZ4_WRITE = -14,
+		GPAK_ERROR_LZ4_READ = -15,
+		GPAK_ERROR_LZ4_WRITE_CLOSE = -16,
+		GPAK_ERROR_LZ4_READ_CLOSE = -17,
 	};
 	typedef enum gpak_error gpak_error_t;
 
@@ -105,9 +117,9 @@ extern "C" {
 	gpak_t* gpak_open(const char* _path, int _mode);
 	int gpak_close(gpak_t* _pak);
 
-	void gpak_set_compression_algorithm(gpak_t* _pak, gpak_header_compression_algorithm_t _algorithm);
+	void gpak_set_compression_algorithm(gpak_t* _pak, int _algorithm);
 	void gpak_set_compression_level(gpak_t* _pak, int _level);
-	void gpak_set_encryption_mode(gpak_t* _pak, gpak_header_compression_algorithm_t _mode);
+	void gpak_set_encryption_mode(gpak_t* _pak, int _mode);
 	void gpak_set_encryption_password(gpak_t* _pak, const char* _password);
 
 	int gpak_add_directory(gpak_t* _pak, const char* _internal_path);

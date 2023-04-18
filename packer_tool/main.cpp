@@ -11,6 +11,10 @@ extern "C" {
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
+//#define USE_DEFLATE
+//#define USE_LZ4
+#define USE_ZST
+
 void on_exit()
 {
 	_CrtDumpMemoryLeaks();
@@ -24,6 +28,17 @@ int main()
 	atexit(on_exit);
 
 	auto* pPak = gpak_open("test.pak", GPAK_MODE_CREATE);
+
+#if defined(USE_DEFLATE)
+	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_DEFLATE);
+	gpak_set_compression_level(pPak, 9);
+#elif defined(USE_LZ4)
+	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_LZ4);
+	gpak_set_compression_level(pPak, 9);
+#elif defined(USE_ZST)
+	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_ZST);
+	gpak_set_compression_level(pPak, 20);
+#endif
 	
 	std::filesystem::path _first_entry{ "E:\\database\\oniilus" };
 	for (auto& entry : std::filesystem::recursive_directory_iterator(_first_entry))
@@ -41,6 +56,8 @@ int main()
 
 
 	pPak = gpak_open("test.pak", GPAK_MODE_READ_ONLY);
+
+	//gpak_set_encryption_password(pPak, "qwertyuiopasdfgh");
 	
 	auto pak_root = gpak_get_root(pPak);
 	filesystem_tree_iterator_t* iterator = filesystem_iterator_create(pak_root);
@@ -59,23 +76,19 @@ int main()
 
 			auto* infile = gpak_fopen(pPak, internal_filepath);
 
-			std::ofstream outfile(_first_entry);
+			std::ofstream outfile(_first_entry, std::ios_base::out | std::ios_base::binary);
 
-			//char buffer[2048];
-			//size_t readed{ 0ull }; size_t whole_readed{ 0ull };
-			//do {
-			//	readed = gpak_fread(buffer, 1ull, 2048ull, infile);
-			//	outfile.write(buffer, readed);
-			//	whole_readed += readed;
-			//} while (readed != 0ull);
-
-			outfile.write(infile->data_, infile->end_ - infile->begin_);
+			char buffer[2048];
+			size_t readed{ 0ull }; size_t whole_readed{ 0ull };
+			do {
+				readed = gpak_fread(buffer, 1ull, 2048ull, infile);
+				outfile.write(buffer, readed);
+				whole_readed += readed;
+			} while (readed != 0ull);
 
 			outfile.close();
 			gpak_fclose(infile);
 			free(internal_filepath);
-			// get file pointer
-			// write to file
 		}
 	} while ((next_directory = filesystem_iterator_next_directory(iterator)));
 
