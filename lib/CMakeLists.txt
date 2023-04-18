@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(pak_archive LANGUAGES C)
+project(libgpak LANGUAGES C)
 
 option(BUILD_SHARED "Build as a shared library" OFF)
 
@@ -14,11 +14,9 @@ ${SOURCES}
 "${EXTERNALS_PATH}lz4/lib/lz4frame.c"
 )
 
-find_package(OpenSSL REQUIRED)
-
 if(BUILD_SHARED)
     add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -DPAK_ARCHIVE_EXPORTS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DGPAK_EXPORTS)
 else()
     add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 endif()
@@ -33,5 +31,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 "${CMAKE_CURRENT_SOURCE_DIR}"
 "${EXTERNALS_PATH}lz4/lib"
 "${EXTERNALS_PATH}zstd/lib"
+"${EXTERNALS_PATH}libfmemopen"
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::Crypto gpak_externals)
+target_link_libraries(${PROJECT_NAME} PRIVATE gpak_externals)

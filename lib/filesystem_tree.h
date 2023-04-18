@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-	#include "pak_export.h"
+	#include "gpak_export.h"
 
 	#include <stdio.h>
 
@@ -14,6 +14,7 @@ extern "C" {
 		char* name_;
 		size_t offset_;
 		size_t size_;
+		size_t usize_;
 		char* path_;
 	};
 	typedef struct filesystem_tree_file filesystem_tree_file_t;
@@ -46,21 +47,21 @@ extern "C" {
 	typedef struct filesystem_tree_iterator filesystem_tree_iterator_t;
 
 	// 
-	filesystem_tree_node_t* filesystem_tree_create();
-	void filesystem_tree_add_directory(filesystem_tree_node_t* _root, const char* _path);
-	void filesystem_tree_add_file(filesystem_tree_node_t* _root, const char* _path, const char* _file_path, size_t _offset, size_t _size);
-	filesystem_tree_node_t* filesystem_tree_find_directory(filesystem_tree_node_t* _root, const char* _path);
-	filesystem_tree_file_t* filesystem_tree_find_file(filesystem_tree_node_t* _root, const char* _path);
-	char* filesystem_tree_directory_path(filesystem_tree_node_t* _node);
-	char* filesystem_tree_file_path(filesystem_tree_node_t* _node, filesystem_tree_file_t* _file);
-	void filesystem_tree_delete(filesystem_tree_node_t* _root);
+	GPAK_API filesystem_tree_node_t* filesystem_tree_create();
+	GPAK_API void filesystem_tree_add_directory(filesystem_tree_node_t* _root, const char* _path);
+	GPAK_API void filesystem_tree_add_file(filesystem_tree_node_t* _root, const char* _path, const char* _file_path, size_t _offset, size_t _size, size_t _usize);
+	GPAK_API filesystem_tree_node_t* filesystem_tree_find_directory(filesystem_tree_node_t* _root, const char* _path);
+	GPAK_API filesystem_tree_file_t* filesystem_tree_find_file(filesystem_tree_node_t* _root, const char* _path);
+	GPAK_API char* filesystem_tree_directory_path(filesystem_tree_node_t* _node);
+	GPAK_API char* filesystem_tree_file_path(filesystem_tree_node_t* _node, filesystem_tree_file_t* _file);
+	GPAK_API void filesystem_tree_delete(filesystem_tree_node_t* _root);
 
 	// Recursive iterator
-	filesystem_tree_iterator_t* filesystem_iterator_create(filesystem_tree_node_t* _root);
-	filesystem_tree_node_t* filesystem_iterator_next_directory(filesystem_tree_iterator_t* _iterator);
-	filesystem_tree_node_t* filesystem_iterator_next_subling_directory(filesystem_tree_iterator_t* _iterator);
-	filesystem_tree_file_t* filesystem_iterator_next_file(filesystem_tree_iterator_t* _iterator);
-	void filesystem_iterator_free(filesystem_tree_iterator_t* _iterator);
+	GPAK_API filesystem_tree_iterator_t* filesystem_iterator_create(filesystem_tree_node_t* _root);
+	GPAK_API filesystem_tree_node_t* filesystem_iterator_next_directory(filesystem_tree_iterator_t* _iterator);
+	GPAK_API filesystem_tree_node_t* filesystem_iterator_next_subling_directory(filesystem_tree_iterator_t* _iterator);
+	GPAK_API filesystem_tree_file_t* filesystem_iterator_next_file(filesystem_tree_iterator_t* _iterator);
+	GPAK_API void filesystem_iterator_free(filesystem_tree_iterator_t* _iterator);
 
 #ifdef __cplusplus
 }

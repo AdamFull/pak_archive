@@ -1,6 +1,6 @@
 #ifdef __cplusplus
 extern "C" {
-#include "pak.h"
+#include "gpak.h"
 #include "filesystem_tree.h"
 }
 #endif 
@@ -12,8 +12,8 @@ extern "C" {
 #include <crtdbg.h>
 
 //#define USE_DEFLATE
-//#define USE_LZ4
-#define USE_ZST
+#define USE_LZ4
+//#define USE_ZST
 
 void on_exit()
 {
@@ -31,16 +31,16 @@ int main()
 
 #if defined(USE_DEFLATE)
 	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_DEFLATE);
-	gpak_set_compression_level(pPak, 9);
+	gpak_set_compression_level(pPak, GPAK_COMPRESSION_DEFLATE_BEST);
 #elif defined(USE_LZ4)
 	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_LZ4);
-	gpak_set_compression_level(pPak, 9);
+	gpak_set_compression_level(pPak, GPAK_COMPRESSION_LZ4_BEST);
 #elif defined(USE_ZST)
 	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_ZST);
-	gpak_set_compression_level(pPak, 20);
+	gpak_set_compression_level(pPak, GPAK_COMPRESSION_ZST_BEST);
 #endif
 	
-	std::filesystem::path _first_entry{ "E:\\database\\oniilus" };
+	std::filesystem::path _first_entry{ "E:\\textures" };
 	for (auto& entry : std::filesystem::recursive_directory_iterator(_first_entry))
 	{
 		auto _path = std::filesystem::relative(entry.path(), _first_entry);

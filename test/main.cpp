@@ -1,6 +1,6 @@
 #ifdef __cplusplus
 extern "C" {
-#include "pak.h"
+#include "gpak.h"
 #include "filesystem_tree.h"
 }
 #endif 

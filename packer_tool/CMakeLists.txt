@@ -12,6 +12,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_EXTENSIONS OFF
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE pak_archive)
+target_link_libraries(${PROJECT_NAME} PRIVATE libgpak)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
