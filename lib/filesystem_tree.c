@@ -24,21 +24,19 @@ filesystem_tree_node_t* _add_directory(filesystem_tree_node_t* _root, const char
     return new_node;
 }
 
-filesystem_tree_file_t* _create_file(const char* _name, const char* _file_path, size_t _offset, size_t _size, size_t _usize)
+filesystem_tree_file_t* _create_file(const char* _name, const char* _file_path, pak_entry_t _entry)
 {
     filesystem_tree_file_t* file = (filesystem_tree_file_t*)malloc(sizeof(filesystem_tree_file_t));
     file->name_ = strdup(_name);
-    file->offset_ = _offset;
-    file->size_ = _size;
-    file->usize_ = _usize;
     file->path_ = strdup(_file_path);
+    file->entry_ = _entry;
 
     return file;
 }
 
-filesystem_tree_file_t* _add_file(filesystem_tree_node_t* _directory, const char* _file_name, const char* _file_path, size_t _offset, size_t _size, size_t _usize)
+filesystem_tree_file_t* _add_file(filesystem_tree_node_t* _directory, const char* _file_name, const char* _file_path, pak_entry_t _entry)
 {
-    filesystem_tree_file_t* new_file = _create_file(_file_name, _file_path, _offset, _size, _usize);
+    filesystem_tree_file_t* new_file = _create_file(_file_name, _file_path, _entry);
     _directory->files_ = (filesystem_tree_file_t**)realloc(_directory->files_, sizeof(filesystem_tree_file_t*) * (_directory->num_files_ + 1));
     _directory->files_[_directory->num_files_++] = new_file;
     return new_file;
@@ -131,7 +129,7 @@ void filesystem_tree_add_directory(filesystem_tree_node_t* _root, const char* _p
     free(dir_path);
 }
 
-void filesystem_tree_add_file(filesystem_tree_node_t* _root, const char* _path, const char* _file_path, size_t _offset, size_t _size, size_t _usize)
+void filesystem_tree_add_file(filesystem_tree_node_t* _root, const char* _path, const char* _file_path, pak_entry_t _entry)
 {
     if (!_root || !_path || !*_path)
         return;
@@ -158,7 +156,7 @@ void filesystem_tree_add_file(filesystem_tree_node_t* _root, const char* _path, 
     }
 
     if (dir_name && !file_name)
-        _add_file(current, dir_name, _file_path, _offset, _size, _usize);
+        _add_file(current, dir_name, _file_path, _entry);
 
     free(dir_path);
 }

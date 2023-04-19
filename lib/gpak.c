@@ -25,7 +25,7 @@
 // Z-standard
 #include <zstd.h>
 
-#define _DEFAULT_BLOCK_SIZE 128 * 1024
+#define _DEFAULT_BLOCK_SIZE 4 * 1024 * 1024
 
 int _pak_make_error(gpak_t* _pak, int _error_code)
 {
@@ -101,8 +101,10 @@ long _read_entry_header(gpak_t* _pak, char* _path, pak_entry_t* _entry)
 	return bytes_readed;
 }
 
-int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompressed_size, long _entry_size)
+int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompressed_size, long _entry_size, uint32_t _crc32)
 {
+	pak_entry_t _entry;
+
 	if (!_pak->stream_ )
 		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
 
@@ -113,16 +115,17 @@ int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompre
 		_shift = _commressed_size;
 
 	long _cur_pos = ftell(_pak->stream_);
-	long _header_start_pos = (long)_shift + _entry_size;
-
-	fseek(_pak->stream_, -_header_start_pos, SEEK_CUR);
+	fseek(_pak->stream_, -((long)_shift), SEEK_CUR);
+	long _offset = ftell(_pak->stream_);
+	fseek(_pak->stream_, -_entry_size, SEEK_CUR);
 
 	char _entry_path[256];
-	pak_entry_t _entry;
 	_read_entry_header(_pak, _entry_path, &_entry);
 
 	_entry.compressed_size_ = _commressed_size;
 	_entry.uncompressed_size_ = _uncompressed_size;
+	_entry.crc32_ = _crc32;
+	_entry.offset_ = _offset;
 
 	fseek(_pak->stream_, -_entry_size, SEEK_CUR);
 
@@ -194,44 +197,51 @@ int _gpak_encrypt_stream_aes(gpak_t* _pak, FILE* _file)
 //-------------------------------COMPRESSION------------------------------
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-int _gpak_compress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile)
+uint32_t _gpak_compress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 {
-	char _buffer[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
 	size_t _readed = 0ull;
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	do
 	{
-		_readed = freadb(_buffer, 1ull, sizeof(_buffer), _infile);
-		fwriteb(_buffer, 1ull, _readed, _outfile);
+		_readed = freadb(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);
+		_crc32 = crc32(_crc32, _bufferIn, _readed);
+		fwriteb(_bufferIn, 1ull, _readed, _outfile);
 	} while (_readed);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	free(_bufferIn);
+
+	return _crc32;
 }
 
-int _gpak_compress_stream_deflate(gpak_t* _pak, FILE* _infile, FILE* _outfile)
+uint32_t _gpak_compress_stream_deflate(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 {
 	z_stream strm;
 	strm.zalloc = Z_NULL;
 	strm.zfree = Z_NULL;
 	strm.opaque = Z_NULL;
 
-	char _bufferIn[_DEFAULT_BLOCK_SIZE];
-	char _bufferOut[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
+	char* _bufferOut = (char*)malloc(_DEFAULT_BLOCK_SIZE);
 
 	int ret = deflateInit(&strm, _pak->header_.compression_level_);
 	if(ret != Z_OK)
 		return _pak_make_error(_pak, GPAK_ERROR_DEFLATE_INIT);
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	int flush;
 	unsigned have;
 	do 
 	{
 		strm.avail_in = freadb(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);
+		_crc32 = crc32(_crc32, _bufferIn, strm.avail_in);
+
 		if (ferror(_infile)) 
 		{
 			ret = _pak_make_error(_pak, GPAK_ERROR_READ);
-			(void)deflateEnd(&strm);
-			return ret;
+			goto end;
 		}
 
 		flush = feof(_infile) ? Z_FINISH : Z_NO_FLUSH;
@@ -248,25 +258,29 @@ int _gpak_compress_stream_deflate(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 			if (fwriteb(_bufferOut, 1ull, have, _outfile) != have || ferror(_outfile)) 
 			{
 				ret = _pak_make_error(_pak, GPAK_ERROR_WRITE);
-				(void)deflateEnd(&strm);
-				return ret;
+				goto end;
 			}
 		} while (strm.avail_out == 0);
 		assert(strm.avail_in == 0);
 
 	} while (flush != Z_FINISH);
 
+end:
 	deflateEnd(&strm);
+	free(_bufferIn);
+	free(_bufferOut);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return _crc32;
 }
 
-int _gpak_compress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
+uint32_t _gpak_compress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 {
 	LZ4F_errorCode_t ret = LZ4F_OK_NoError;
 	size_t len;
 	LZ4_writeFile_t* lz4fWrite;
-	char buffer[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	LZ4F_preferences_t _preferences;
 	_preferences.frameInfo.blockSizeID = LZ4F_max4MB;
@@ -286,38 +300,41 @@ int _gpak_compress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 
 	while (1) 
 	{
-		len = freadb(buffer, 1, _DEFAULT_BLOCK_SIZE, _infile);
+		len = freadb(_bufferIn, 1, _DEFAULT_BLOCK_SIZE, _infile);
+		_crc32 = crc32(_crc32, _bufferIn, len);
 
 		if (ferror(_infile)) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_READ);
-			goto out;
+			goto end;
 		}
 
 		if (len == 0)
 			break;
 
-		ret = LZ4F_write(lz4fWrite, buffer, len);
+		ret = LZ4F_write(lz4fWrite, _bufferIn, len);
 		if (LZ4F_isError(ret)) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_LZ4_WRITE);
-			goto out;
+			goto end;
 		}
 	}
 
-out:
+end:
+	free(_bufferIn);
 	if (LZ4F_isError(LZ4F_writeClose(lz4fWrite))) 
 		return _pak_make_error(_pak, GPAK_ERROR_LZ4_WRITE_CLOSE);
-
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return _crc32;
 }
 
-int _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
+uint32_t _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 {
 	size_t const buffInSize = ZSTD_CStreamInSize();
 	void* const buffIn = malloc(buffInSize);
 	size_t const buffOutSize = ZSTD_CStreamOutSize();
 	void* const buffOut = malloc(buffOutSize);
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	/* Create the context. */
 	ZSTD_CCtx* const cctx = ZSTD_createCCtx();
@@ -331,6 +348,8 @@ int _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 	for (;;) 
 	{
 		size_t read = freadb(buffIn, 1, toRead, _infile);
+		_crc32 = crc32(_crc32, buffIn, read);
+
 		int const lastChunk = (read < toRead);
 		ZSTD_EndDirective const mode = lastChunk ? ZSTD_e_end : ZSTD_e_continue;
 
@@ -354,19 +373,24 @@ int _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 	free(buffIn);
 	free(buffOut);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return _crc32;
 }
 
 
-int _gpak_decompress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
+uint32_t _gpak_decompress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
 {
-	char _buffer[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
 	size_t bytesReaded = 0ull;
-	size_t nextBlockSize = sizeof(_buffer);
+	size_t nextBlockSize = _DEFAULT_BLOCK_SIZE;
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
+
 	do
 	{
-		size_t _readed = freadb(_buffer, 1ull, nextBlockSize, _infile);
-		fwriteb(_buffer, 1ull, _readed, _outfile);
+		size_t _readed = freadb(_bufferIn, 1ull, nextBlockSize, _infile);
+		_crc32 = crc32(_crc32, _bufferIn, _readed);
+
+		fwriteb(_bufferIn, 1ull, _readed, _outfile);
 		bytesReaded += _readed;
 
 		if (_read_size - bytesReaded < nextBlockSize)
@@ -376,35 +400,35 @@ int _gpak_decompress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile, si
 	if (bytesReaded != _read_size)
 		return _pak_make_error(_pak, GPAK_ERROR_READ);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	free(_bufferIn);
+
+	return _crc32;
 }
 
-int _gpak_decompress_stream_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
+uint32_t _gpak_decompress_stream_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
 {
 	z_stream strm;
 	strm.zalloc = Z_NULL;
 	strm.zfree = Z_NULL;
 	strm.opaque = Z_NULL;
 
-	char _bufferIn[_DEFAULT_BLOCK_SIZE];
-	char _bufferOut[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
+	char* _bufferOut = (char*)malloc(_DEFAULT_BLOCK_SIZE);
 
 	int ret = inflateInit(&strm);
 	if (ret != Z_OK)
 		return _pak_make_error(_pak, GPAK_ERROR_INFLATE_INIT);
 
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
+
 	unsigned have;
 	size_t total_read = 0ull;
+	
 	do 
 	{
 		size_t bytes_to_read = _read_size - total_read < _DEFAULT_BLOCK_SIZE ? _read_size - total_read : _DEFAULT_BLOCK_SIZE;
 		strm.avail_in = freadb(_bufferIn, 1, bytes_to_read, _infile);
 		total_read += strm.avail_in;
-		if (ferror(_infile))
-		{
-			(void)inflateEnd(&strm);
-			return _pak_make_error(_pak, GPAK_ERROR_READ);
-		}
 
 		strm.next_in = _bufferIn;
 
@@ -419,32 +443,38 @@ int _gpak_decompress_stream_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile,
 			case Z_NEED_DICT:
 			case Z_DATA_ERROR:
 			case Z_MEM_ERROR:
-				(void)inflateEnd(&strm);
-				return ret;
+				goto end;
 			}
 
 			have = _DEFAULT_BLOCK_SIZE - strm.avail_out;
 
-			if (fwriteb(_bufferOut, 1, have, _outfile) != have || ferror(_outfile)) {
+			_crc32 = crc32(_crc32, _bufferOut, have);
 
-				(void)inflateEnd(&strm);
-				return _pak_make_error(_pak, GPAK_ERROR_INFLATE_FAILED);
+			if (fwriteb(_bufferOut, 1, have, _outfile) != have || ferror(_outfile))
+			{
+				_pak_make_error(_pak, GPAK_ERROR_INFLATE_FAILED);
+				goto end;
 			}
 
 		} while (strm.avail_out == 0);
 
 	} while (ret != Z_STREAM_END);
 
+end:
+	free(_bufferIn);
+	free(_bufferOut);
 	(void)inflateEnd(&strm);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return _crc32;
 }
 
-int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
+uint32_t _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
 {
 	LZ4F_errorCode_t ret = LZ4F_OK_NoError;
 	LZ4_readFile_t* lz4fRead;
-	char buffer[_DEFAULT_BLOCK_SIZE];
+	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	ret = LZ4F_readOpen(&lz4fRead, _infile);
 	if (LZ4F_isError(ret)) 
@@ -457,7 +487,7 @@ int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, siz
 	{
 		size_t bytes_to_read = (_read_size - bytesReaded) < _DEFAULT_BLOCK_SIZE ? (_read_size - bytesReaded) : _DEFAULT_BLOCK_SIZE;
 
-		ret = LZ4F_read(lz4fRead, buffer, _DEFAULT_BLOCK_SIZE);
+		ret = LZ4F_read(lz4fRead, _bufferIn, _DEFAULT_BLOCK_SIZE);
 		if (LZ4F_isError(ret)) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_LZ4_READ);
@@ -469,7 +499,9 @@ int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, siz
 
 		bytesReaded += ret;
 
-		if (fwriteb(buffer, 1, ret, _outfile) != ret) 
+		_crc32 = crc32(_crc32, _bufferIn, ret);
+
+		if (fwriteb(_bufferIn, 1, ret, _outfile) != ret) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_WRITE);
 			goto out;
@@ -477,18 +509,21 @@ int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, siz
 	}
 
 out:
+	free(_bufferIn);
 	if (LZ4F_isError(LZ4F_readClose(lz4fRead))) 
 		return _pak_make_error(_pak, GPAK_ERROR_LZ4_READ_CLOSE);
 
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return _crc32;
 }
 
-int _gpak_decompress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
+uint32_t _gpak_decompress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
 {
 	size_t const buffInSize = ZSTD_DStreamInSize();
 	void* const buffIn = malloc(buffInSize);
 	size_t const buffOutSize = ZSTD_DStreamOutSize();
 	void* const buffOut = malloc(buffOutSize);
+
+	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
 
 	ZSTD_DCtx* const dctx = ZSTD_createDCtx();
 	assert(dctx != NULL && "ZSTD_createDCtx() failed!");
@@ -515,6 +550,8 @@ int _gpak_decompress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile, si
 			ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };
 			size_t const ret = ZSTD_decompressStream(dctx, &output, &input);
 
+			_crc32 = crc32(_crc32, buffOut, output.pos);
+
 			fwriteb(buffOut, 1, output.pos, _outfile);
 			lastRet = ret;
 		}
@@ -537,7 +574,7 @@ clear:
 	free(buffIn);
 	free(buffOut);
 
-	return _pak->last_error_;
+	return _crc32;
 }
 
 
@@ -577,14 +614,15 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 
 			long cursor = ftell(_pak->stream_);
 
+			uint32_t _crc32 = 0u;
 			if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)
-				_gpak_compress_stream_deflate(_pak, _infile, _pak->stream_);
+				_crc32 = _gpak_compress_stream_deflate(_pak, _infile, _pak->stream_);
 			else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4)
-				_gpak_compress_stream_lz4(_pak, _infile, _pak->stream_);
+				_crc32 = _gpak_compress_stream_lz4(_pak, _infile, _pak->stream_);
 			else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST)
-				_gpak_compress_stream_zstd(_pak, _infile, _pak->stream_);
+				_crc32 = _gpak_compress_stream_zstd(_pak, _infile, _pak->stream_);
 			else
-				_gpak_compress_stream_none(_pak, _infile, _pak->stream_);
+				_crc32 = _gpak_compress_stream_none(_pak, _infile, _pak->stream_);
 
 			long position = ftell(_pak->stream_);
 			size_t uncompressed_size = ftell(_infile);
@@ -592,7 +630,7 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 
 			fflush(_pak->stream_);
 
-			_update_entry_header(_pak, compressed_size, uncompressed_size, header_size);
+			_update_entry_header(_pak, compressed_size, uncompressed_size, header_size, _crc32);
 
 			fclose(_infile);
 		}
@@ -613,7 +651,7 @@ int _gpak_parse_file_tree(gpak_t* _pak)
 		if (readed == 0)
 			break;	// EOF
 
-		filesystem_tree_add_file(_pak->root_, _filename, NULL, ftell(_pak->stream_), _entry.compressed_size_, _entry.uncompressed_size_);
+		filesystem_tree_add_file(_pak->root_, _filename, NULL, _entry);
 
 		fseek(_pak->stream_, _entry.compressed_size_, SEEK_CUR);
 	}
@@ -735,7 +773,13 @@ int gpak_add_directory(gpak_t* _pak, const char* _internal_path)
 
 int gpak_add_file(gpak_t* _pak, const char* _external_path, const char* _internal_path)
 {
-	filesystem_tree_add_file(_pak->root_, _internal_path, _external_path, 0ull, 0ull, 0ull);
+	pak_entry_t _entry;
+	_entry.compressed_size_ = 0u;
+	_entry.uncompressed_size_ = 0u;
+	_entry.offset_ = 0u;
+	_entry.crc32_ = 0;
+
+	filesystem_tree_add_file(_pak->root_, _internal_path, _external_path, _entry);
 	return _pak_make_error(_pak, GPAK_ERROR_OK);
 }
 
@@ -769,29 +813,33 @@ gpak_file_t* gpak_fopen(gpak_t* _pak, const char* _path)
 		return NULL;
 	}
 
-	gpak_file_t* mfile = (gpak_file_t*)malloc(sizeof(gpak_file_t));
-	mfile->data_ = (char*)malloc(_file_info->usize_ + 1);
-	mfile->data_[_file_info->usize_] = '\0';
+	uint32_t uncompressed_size = _file_info->entry_.uncompressed_size_;
+	uint32_t compressed_size = _file_info->entry_.compressed_size_;
 
-	mfile->stream_ = fmemopen(mfile->data_, _file_info->usize_, "wb+");
+	gpak_file_t* mfile = (gpak_file_t*)malloc(sizeof(gpak_file_t));
+	mfile->data_ = (char*)malloc(uncompressed_size + 1);
+	mfile->data_[uncompressed_size] = '\0';
+
+	mfile->stream_ = fmemopen(mfile->data_, uncompressed_size, "wb+");
 
 	// Setting position to file start
-	fseek(_pak->stream_, _file_info->offset_, SEEK_SET);
+	fseek(_pak->stream_, _file_info->entry_.offset_, SEEK_SET);
 
-	int res;
 	if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)
-		res = _gpak_decompress_stream_inflate(_pak, _pak->stream_, mfile->stream_, _file_info->size_);
+		mfile->crc32_ = _gpak_decompress_stream_inflate(_pak, _pak->stream_, mfile->stream_, compressed_size);
 	else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4)
-		res = _gpak_decompress_stream_lz4(_pak, _pak->stream_, mfile->stream_, _file_info->size_);
+		mfile->crc32_ = _gpak_decompress_stream_lz4(_pak, _pak->stream_, mfile->stream_, compressed_size);
 	else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST)
-		res = _gpak_decompress_stream_zstd(_pak, _pak->stream_, mfile->stream_, _file_info->size_);
+		mfile->crc32_ = _gpak_decompress_stream_zstd(_pak, _pak->stream_, mfile->stream_, compressed_size);
 	else
-		res = _gpak_decompress_stream_none(_pak, _pak->stream_, mfile->stream_, _file_info->size_);
+		mfile->crc32_ = _gpak_decompress_stream_none(_pak, _pak->stream_, mfile->stream_, compressed_size);
 
 	fseek(mfile->stream_, 0, SEEK_SET);
 
-	if (res != GPAK_ERROR_OK)
+	// Check crc32
+	if (mfile->crc32_ != _file_info->entry_.crc32_)
 	{
+		_pak_make_error(_pak, GPAK_ERROR_FILE_CRC_NOT_MATCH);
 		gpak_fclose(mfile);
 		return NULL;
 	}

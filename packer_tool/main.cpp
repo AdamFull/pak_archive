@@ -11,8 +11,8 @@ extern "C" {
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
-//#define USE_DEFLATE
-#define USE_LZ4
+#define USE_DEFLATE
+//#define USE_LZ4
 //#define USE_ZST
 
 void on_exit()
@@ -37,7 +37,7 @@ int main()
 	gpak_set_compression_level(pPak, GPAK_COMPRESSION_LZ4_BEST);
 #elif defined(USE_ZST)
 	gpak_set_compression_algorithm(pPak, GPAK_HEADER_COMPRESSION_ZST);
-	gpak_set_compression_level(pPak, GPAK_COMPRESSION_ZST_BEST);
+	gpak_set_compression_level(pPak, 19);
 #endif
 	
 	std::filesystem::path _first_entry{ "E:\\textures" };
