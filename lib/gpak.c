@@ -44,6 +44,16 @@ int _pak_make_error(gpak_t* _pak, int _error_code)
 //---------------------------------HELPERS--------------------------------
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+size_t fwriteb(const void* _data, size_t _elemSize, size_t _elemCount, FILE* _file)
+{
+	return fwrite(_data, _elemSize, _elemCount, _file) * _elemSize;
+}
+
+size_t freadb(void* _data, size_t _elemSize, size_t _elemCount, FILE* _file)
+{
+	return fread(_data, _elemSize, _elemCount, _file) * _elemSize;
+}
+
 pak_header_t _pak_make_header()
 {
 	pak_header_t _header;
@@ -52,8 +62,6 @@ pak_header_t _pak_make_header()
 	_header.compression_ = GPAK_HEADER_COMPRESSION_NONE;
 	_header.encryption_ = GPAK_HEADER_ENCRYPTION_NONE;
 	_header.compression_level_ = 0;
-	_header.compressed_size_ = 0ull;
-	_header.uncompressed_size_ = 0ull;
 	_header.entry_count_ = 0ull;
 
 	return _header;
@@ -67,95 +75,33 @@ int _pak_validate_header(gpak_t* _pak)
 	return _pak_make_error(_pak, GPAK_ERROR_OK);
 }
 
-int _pak_write_single(gpak_t* _pak, const void* _data, size_t _size)
+long _write_entry_header(gpak_t* _pak, const char* _path, pak_entry_t* _entry)
 {
-	if (!_pak->stream_ )
-		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
+	long bytes_writen = 0u;
 
-	if (_pak->mode_ & GPAK_MODE_READ_ONLY)
-		return _pak_make_error(_pak, GPAK_ERROR_INCORRECT_MODE);
+	// Write filename
+	short name_size = strlen(_path);
+	bytes_writen += fwriteb(&name_size, sizeof(short), 1ull, _pak->stream_);
+	bytes_writen += fwriteb(_path, 1ull, name_size, _pak->stream_);
+	bytes_writen += fwriteb(_entry, sizeof(pak_entry_t), 1ull, _pak->stream_);
 
-	size_t _res = fwrite(_data, _size, 1ull, _pak->stream_);
-
-	if (_res * _size != _size)
-		return _pak_make_error(_pak, GPAK_ERROR_WRITE);
-
-	int _fres = _gpak_flush(_pak);
-	if (_fres < 0)
-		return _pak_make_error(_pak, GPAK_ERROR_WRITE);
-
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return bytes_writen;
 }
 
-int _pak_read_single(gpak_t* _pak, void* _data, size_t _size)
+long _read_entry_header(gpak_t* _pak, char* _path, pak_entry_t* _entry)
 {
-	if (!_pak->stream_ )
-		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
+	long bytes_readed = 0u;
 
-	size_t _res = fread(_data, _size, 1ull, _pak->stream_);
+	short name_size;
+	bytes_readed += freadb(&name_size, sizeof(short), 1ull, _pak->stream_);
+	bytes_readed += freadb(_path, 1ull, name_size, _pak->stream_);
+	bytes_readed += freadb(_entry, sizeof(pak_entry_t), 1ull, _pak->stream_);
+	_path[name_size] = '\0';
 
-	if (_res * _size != _size)
-		return _pak_make_error(_pak, GPAK_ERROR_READ);
-
-	return _pak_make_error(_pak, GPAK_ERROR_OK);
+	return bytes_readed;
 }
 
-size_t _pak_write(gpak_t* _pak, const void* _data, size_t _size, size_t _count)
-{
-	if (!_pak->stream_)
-	{
-		_pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
-		return 0ull;
-	}
-
-	if (_pak->mode_ & GPAK_MODE_READ_ONLY)
-	{
-		_pak_make_error(_pak, GPAK_ERROR_INCORRECT_MODE);
-		return 0ull;
-	}
-
-	size_t _res = fwrite(_data, _size, _count, _pak->stream_);
-
-	int _fres = _gpak_flush(_pak);
-	if (_fres < 0)
-		return 0ull;
-
-	return _res * _size;
-}
-
-size_t _pak_read(gpak_t* _pak, void* _data, size_t _size, size_t _count)
-{
-	if (!_pak->stream_)
-	{
-		_pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
-		return 0ull;
-	}
-
-	if (_pak->mode_ & GPAK_MODE_CREATE)
-	{
-		_pak_make_error(_pak, GPAK_ERROR_INCORRECT_MODE);
-		return 0ull;
-	}
-
-	return fread(_data, _size, _count, _pak->stream_) * _size;
-}
-
-int _write_entry_header(gpak_t* _pak, const char* _path)
-{
-	pak_entry_t _entry;
-	strcpy(_entry.name, _path);
-	_entry.offset_ = _gpak_tell(_pak);
-	_entry.compressed_size_ = 0ull;
-	_entry.uncompressed_size_ = 0ull;
-
-	_pak->header_.compressed_size_ += sizeof(pak_entry_t);
-	_pak->header_.uncompressed_size_ += sizeof(pak_entry_t);
-	++_pak->header_.entry_count_;
-
-	return _pak_write_single(_pak, &_entry, sizeof(pak_entry_t));
-}
-
-int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompressed_size)
+int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompressed_size, long _entry_size)
 {
 	if (!_pak->stream_ )
 		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
@@ -166,82 +112,42 @@ int _update_entry_header(gpak_t* _pak, size_t _commressed_size, size_t _uncompre
 	else
 		_shift = _commressed_size;
 
-	long _entry_size = sizeof(pak_entry_t);
-	size_t _cur_pos = _gpak_tell(_pak);
-	long _header_start_pos = (long)(_shift + _entry_size);
+	long _cur_pos = ftell(_pak->stream_);
+	long _header_start_pos = (long)_shift + _entry_size;
 
-	_gpak_seek(_pak, -_header_start_pos, SEEK_CUR);
+	fseek(_pak->stream_, -_header_start_pos, SEEK_CUR);
 
+	char _entry_path[256];
 	pak_entry_t _entry;
-	int _res = _pak_read_single(_pak, &_entry, _entry_size);
-	if (_res != GPAK_ERROR_OK)
-	{
-		_gpak_seek(_pak, 0l, SEEK_END);
-		return _pak_make_error(_pak, _res);
-	}
+	_read_entry_header(_pak, _entry_path, &_entry);
 
 	_entry.compressed_size_ = _commressed_size;
 	_entry.uncompressed_size_ = _uncompressed_size;
 
-	_pak->header_.compressed_size_ += _commressed_size;
-	_pak->header_.uncompressed_size_ += _uncompressed_size;
+	fseek(_pak->stream_, -_entry_size, SEEK_CUR);
 
-	_gpak_seek(_pak, -_entry_size, SEEK_CUR);
+	_write_entry_header(_pak, _entry_path, &_entry);
 
-	_res = _pak_write_single(_pak, &_entry, _entry_size);
-	if (_res != GPAK_ERROR_OK)
-	{
-		_gpak_seek(_pak, 0l, SEEK_END);
-		return _pak_make_error(_pak, _res);
-	}
+	fseek(_pak->stream_, 0l, SEEK_END);
 
-	_gpak_seek(_pak, 0l, SEEK_END);
-
-	if (_cur_pos != _gpak_tell(_pak))
-		_pak_make_error(_pak, GPAK_ERROR_WRITE);
-		return _pak->last_error_;
+	if (_cur_pos != ftell(_pak->stream_))
+		return _pak_make_error(_pak, GPAK_ERROR_WRITE);
 
 	return GPAK_ERROR_OK;
 }
 
 int _update_pak_header(gpak_t* _pak)
 {
-	_gpak_seek(_pak, 0, SEEK_SET);
+	fseek(_pak->stream_, 0, SEEK_SET);
 
-	int _res = _pak_write_single(_pak, &_pak->header_, sizeof(pak_header_t));
-	if (_res != GPAK_ERROR_OK)
+	size_t readed = fwriteb(&_pak->header_, sizeof(pak_header_t), 1ull, _pak->stream_);
+	if (readed != sizeof(pak_header_t))
 	{
-		_gpak_seek(_pak, 0l, SEEK_END);
-		return _pak_make_error(_pak, _res);
+		fseek(_pak->stream_, 0l, SEEK_END);
+		return _pak_make_error(_pak, GPAK_ERROR_WRITE);
 	}
 
-	// TODO: Add checksum
-
 	return GPAK_ERROR_OK;
-}
-
-int _gpak_seek(gpak_t* _pak, long _offset, int _origin)
-{
-	if (!_pak->stream_ )
-		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
-
-	return fseek(_pak->stream_, _offset, _origin);
-}
-
-long _gpak_tell(gpak_t* _pak)
-{
-	if (!_pak->stream_)
-		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
-
-	return ftell(_pak->stream_);
-}
-
-int _gpak_flush(gpak_t* _pak)
-{
-	if (!_pak->stream_)
-		return _pak_make_error(_pak, GPAK_ERROR_STREAM_IS_NULL);
-
-	return fflush(_pak->stream_);
 }
 
 
@@ -265,7 +171,7 @@ int _gpak_encrypt_stream_aes(gpak_t* _pak, FILE* _file)
 
 	do
 	{
-		_readed = fread(_buffer, 1ull, sizeof(_buffer), _file);
+		_readed = freadb(_buffer, 1ull, sizeof(_buffer), _file);
 
 		if (_readed < sizeof(_buffer))
 		{
@@ -275,7 +181,7 @@ int _gpak_encrypt_stream_aes(gpak_t* _pak, FILE* _file)
 
 		AES_cbc_encrypt(_buffer, _bufferout, sizeof(_buffer), &aesKey, iv, AES_ENCRYPT);
 
-		_pak_write(_pak, _bufferout, 1ull, _readed);
+		fwriteb(_bufferout, 1ull, _readed, _pak->stream_);
 	} while (_readed);
 
 	free(iv);
@@ -295,8 +201,8 @@ int _gpak_compress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 
 	do
 	{
-		_readed = fread(_buffer, 1ull, sizeof(_buffer), _infile);
-		fwrite(_buffer, 1ull, _readed, _outfile);
+		_readed = freadb(_buffer, 1ull, sizeof(_buffer), _infile);
+		fwriteb(_buffer, 1ull, _readed, _outfile);
 	} while (_readed);
 
 	return _pak_make_error(_pak, GPAK_ERROR_OK);
@@ -320,7 +226,7 @@ int _gpak_compress_stream_deflate(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 	unsigned have;
 	do 
 	{
-		strm.avail_in = fread(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);
+		strm.avail_in = freadb(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);
 		if (ferror(_infile)) 
 		{
 			ret = _pak_make_error(_pak, GPAK_ERROR_READ);
@@ -339,7 +245,7 @@ int _gpak_compress_stream_deflate(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 			assert(ret != Z_STREAM_ERROR);
 
 			have = _DEFAULT_BLOCK_SIZE - strm.avail_out;
-			if (fwrite(_bufferOut, 1ull, have, _outfile) != have || ferror(_outfile)) 
+			if (fwriteb(_bufferOut, 1ull, have, _outfile) != have || ferror(_outfile)) 
 			{
 				ret = _pak_make_error(_pak, GPAK_ERROR_WRITE);
 				(void)deflateEnd(&strm);
@@ -365,11 +271,11 @@ int _gpak_compress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 	LZ4F_preferences_t _preferences;
 	_preferences.frameInfo.blockSizeID = LZ4F_max4MB;
 	_preferences.frameInfo.blockMode = LZ4F_blockLinked;
-	_preferences.frameInfo.contentChecksumFlag = 1;
+	_preferences.frameInfo.contentChecksumFlag = 0;
 	_preferences.frameInfo.frameType = LZ4F_frame;
 	_preferences.frameInfo.contentSize = 0;
-	_preferences.frameInfo.dictID = 0;
-	_preferences.frameInfo.blockChecksumFlag = 1;
+	_preferences.frameInfo.dictID = 1;
+	_preferences.frameInfo.blockChecksumFlag = 0;
 	_preferences.compressionLevel = _pak->header_.compression_level_;
 	_preferences.autoFlush = 1;
 	_preferences.favorDecSpeed = 1;
@@ -380,7 +286,7 @@ int _gpak_compress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 
 	while (1) 
 	{
-		len = fread(buffer, 1, _DEFAULT_BLOCK_SIZE, _infile);
+		len = freadb(buffer, 1, _DEFAULT_BLOCK_SIZE, _infile);
 
 		if (ferror(_infile)) 
 		{
@@ -424,7 +330,7 @@ int _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 	size_t const toRead = buffInSize;
 	for (;;) 
 	{
-		size_t read = fread(buffIn, 1, toRead, _infile);
+		size_t read = freadb(buffIn, 1, toRead, _infile);
 		int const lastChunk = (read < toRead);
 		ZSTD_EndDirective const mode = lastChunk ? ZSTD_e_end : ZSTD_e_continue;
 
@@ -435,7 +341,7 @@ int _gpak_compress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile)
 			ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };
 			size_t const remaining = ZSTD_compressStream2(cctx, &output, &input, mode);
 			//CHECK_ZSTD(remaining);
-			fwrite(buffOut, 1, output.pos, _outfile);
+			fwriteb(buffOut, 1, output.pos, _outfile);
 			finished = lastChunk ? (remaining == 0) : (input.pos == input.size);
 		} while (!finished);
 		assert(input.pos == input.size && "Impossible: zstd only returns 0 when the input is completely consumed!");
@@ -459,8 +365,8 @@ int _gpak_decompress_stream_none(gpak_t* _pak, FILE* _infile, FILE* _outfile, si
 	size_t nextBlockSize = sizeof(_buffer);
 	do
 	{
-		size_t _readed = fread(_buffer, 1ull, nextBlockSize, _infile);
-		fwrite(_buffer, 1ull, _readed, _outfile);
+		size_t _readed = freadb(_buffer, 1ull, nextBlockSize, _infile);
+		fwriteb(_buffer, 1ull, _readed, _outfile);
 		bytesReaded += _readed;
 
 		if (_read_size - bytesReaded < nextBlockSize)
@@ -492,7 +398,7 @@ int _gpak_decompress_stream_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile,
 	do 
 	{
 		size_t bytes_to_read = _read_size - total_read < _DEFAULT_BLOCK_SIZE ? _read_size - total_read : _DEFAULT_BLOCK_SIZE;
-		strm.avail_in = fread(_bufferIn, 1, bytes_to_read, _infile);
+		strm.avail_in = freadb(_bufferIn, 1, bytes_to_read, _infile);
 		total_read += strm.avail_in;
 		if (ferror(_infile))
 		{
@@ -519,7 +425,7 @@ int _gpak_decompress_stream_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile,
 
 			have = _DEFAULT_BLOCK_SIZE - strm.avail_out;
 
-			if (fwrite(_bufferOut, 1, have, _outfile) != have || ferror(_outfile)) {
+			if (fwriteb(_bufferOut, 1, have, _outfile) != have || ferror(_outfile)) {
 
 				(void)inflateEnd(&strm);
 				return _pak_make_error(_pak, GPAK_ERROR_INFLATE_FAILED);
@@ -544,12 +450,14 @@ int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, siz
 	if (LZ4F_isError(ret)) 
 		return _pak_make_error(_pak, GPAK_ERROR_LZ4_READ_OPEN);
 
-	size_t total_bytes_read = 0;
-	while (total_bytes_read < _read_size)
-	{
-		size_t bytes_to_read = (_read_size - total_bytes_read) < _DEFAULT_BLOCK_SIZE ? (_read_size - total_bytes_read) : _DEFAULT_BLOCK_SIZE;
+	size_t bytesReaded = 0;
+	size_t nextBlockSize = _DEFAULT_BLOCK_SIZE;
 
-		ret = LZ4F_read(lz4fRead, buffer, bytes_to_read);
+	while (bytesReaded < _read_size)
+	{
+		size_t bytes_to_read = (_read_size - bytesReaded) < _DEFAULT_BLOCK_SIZE ? (_read_size - bytesReaded) : _DEFAULT_BLOCK_SIZE;
+
+		ret = LZ4F_read(lz4fRead, buffer, _DEFAULT_BLOCK_SIZE);
 		if (LZ4F_isError(ret)) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_LZ4_READ);
@@ -559,9 +467,9 @@ int _gpak_decompress_stream_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, siz
 		if (ret == 0)
 			break;
 
-		total_bytes_read += ret;
+		bytesReaded += ret;
 
-		if (fwrite(buffer, 1, ret, _outfile) != ret) 
+		if (fwriteb(buffer, 1, ret, _outfile) != ret) 
 		{
 			_pak_make_error(_pak, GPAK_ERROR_WRITE);
 			goto out;
@@ -592,7 +500,7 @@ int _gpak_decompress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile, si
 	while (bytesRead < _read_size)
 	{
 		size_t const toRead = (bytesRead + buffInSize <= _read_size) ? buffInSize : (_read_size - bytesRead);
-		size_t read = fread(buffIn, 1, toRead, _infile);
+		size_t read = freadb(buffIn, 1, toRead, _infile);
 
 		if (!read)
 		{
@@ -607,7 +515,7 @@ int _gpak_decompress_stream_zstd(gpak_t* _pak, FILE* _infile, FILE* _outfile, si
 			ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };
 			size_t const ret = ZSTD_decompressStream(dctx, &output, &input);
 
-			fwrite(buffOut, 1, output.pos, _outfile);
+			fwriteb(buffOut, 1, output.pos, _outfile);
 			lastRet = ret;
 		}
 	}
@@ -649,7 +557,9 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 		{
 			// Write file header first
 			char* internal_filepath = filesystem_tree_file_path(next_directory, next_file);
-			int res = _write_entry_header(_pak, internal_filepath);
+			pak_entry_t _entry;
+			long header_size = _write_entry_header(_pak, internal_filepath, &_entry);
+			++_pak->header_.entry_count_;
 			free(internal_filepath);
 
 			FILE* _infile = fopen(next_file->path_, "rb");
@@ -665,7 +575,7 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 			//	//char* _tempfilename = 
 			//}
 
-			long cursor = _gpak_tell(_pak);
+			long cursor = ftell(_pak->stream_);
 
 			if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)
 				_gpak_compress_stream_deflate(_pak, _infile, _pak->stream_);
@@ -676,12 +586,13 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 			else
 				_gpak_compress_stream_none(_pak, _infile, _pak->stream_);
 
+			long position = ftell(_pak->stream_);
 			size_t uncompressed_size = ftell(_infile);
-			size_t compressed_size = _gpak_tell(_pak) - cursor;
+			size_t compressed_size = position - cursor;
 
-			_gpak_flush(_pak);
+			fflush(_pak->stream_);
 
-			_update_entry_header(_pak, compressed_size, uncompressed_size);
+			_update_entry_header(_pak, compressed_size, uncompressed_size, header_size);
 
 			fclose(_infile);
 		}
@@ -696,14 +607,15 @@ int _gpak_parse_file_tree(gpak_t* _pak)
 {
 	while (1)
 	{
+		char _filename[256];
 		pak_entry_t _entry;
-		int _res = _pak_read_single(_pak, &_entry, sizeof(pak_entry_t));
-		if (_res != GPAK_ERROR_OK)
+		size_t readed = _read_entry_header(_pak, _filename, &_entry);
+		if (readed == 0)
 			break;	// EOF
 
-		filesystem_tree_add_file(_pak->root_, _entry.name, NULL, _gpak_tell(_pak), _entry.compressed_size_, _entry.uncompressed_size_);
+		filesystem_tree_add_file(_pak->root_, _filename, NULL, ftell(_pak->stream_), _entry.compressed_size_, _entry.uncompressed_size_);
 
-		_gpak_seek(_pak, _entry.compressed_size_, SEEK_CUR);
+		fseek(_pak->stream_, _entry.compressed_size_, SEEK_CUR);
 	}
 
 	return _pak_make_error(_pak, GPAK_ERROR_OK);
@@ -747,8 +659,8 @@ gpak_t* gpak_open(const char* _path, int _mode)
 	if (_mode & GPAK_MODE_CREATE)
 	{
 		pak->header_ = _pak_make_header();
-		int res = _pak_write_single(pak, &pak->header_, sizeof(pak_header_t));
-		if (res != GPAK_ERROR_OK)
+		size_t res = fwriteb(&pak->header_, sizeof(pak_header_t), 1ull, pak->stream_);
+		if (res != sizeof(pak_header_t))
 		{
 			gpak_close(pak);
 			return NULL;
@@ -756,8 +668,8 @@ gpak_t* gpak_open(const char* _path, int _mode)
 	}
 	else if (_mode & GPAK_MODE_READ_ONLY)
 	{
-		int res = _pak_read_single(pak, &pak->header_, sizeof(pak_header_t));
-		if (_pak_validate_header(pak) != GPAK_ERROR_OK || res != GPAK_ERROR_OK)
+		size_t res = freadb(&pak->header_, sizeof(pak_header_t), 1ull, pak->stream_);
+		if (_pak_validate_header(pak) != GPAK_ERROR_OK || res != sizeof(pak_header_t))
 		{
 			gpak_close(pak);
 			return NULL;
@@ -864,7 +776,7 @@ gpak_file_t* gpak_fopen(gpak_t* _pak, const char* _path)
 	mfile->stream_ = fmemopen(mfile->data_, _file_info->usize_, "wb+");
 
 	// Setting position to file start
-	_gpak_seek(_pak, _file_info->offset_, SEEK_SET);
+	fseek(_pak->stream_, _file_info->offset_, SEEK_SET);
 
 	int res;
 	if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)

@@ -8,6 +8,7 @@ extern "C" {
 	#include "gpak_export.h"
 
 	#include <stdio.h>
+	#include <stdint.h>
 
 	enum gpak_header_compression_algorithm
 	{
@@ -57,11 +58,8 @@ extern "C" {
 		char format_[5];
 		gpak_header_compression_algorithm_t compression_;
 		gpak_header_encryption_mode_t encryption_;
-		int compression_level_;
-		size_t compressed_size_;
-		size_t uncompressed_size_;
-		size_t entry_count_;
-		int crc32_;
+		char compression_level_;
+		uint32_t entry_count_;
 	};
 	typedef struct gpak_header pak_header_t;
 
@@ -76,10 +74,8 @@ extern "C" {
 
 	struct gpak_entry_header
 	{
-		char name[256];
-		size_t offset_;
-		size_t compressed_size_;
-		size_t uncompressed_size_;
+		uint32_t compressed_size_;
+		uint32_t uncompressed_size_;
 		int crc32_;
 	};
 	typedef struct gpak_entry_header pak_entry_t;
