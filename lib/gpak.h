@@ -11,6 +11,10 @@ extern "C" {
 	GPAK_API gpak_t* gpak_open(const char* _path, int _mode);
 	GPAK_API int gpak_close(gpak_t* _pak);
 
+	GPAK_API void gpak_set_user_data(gpak_t* _pak, void* _user_data);
+	GPAK_API void gpak_set_error_handler(gpak_t* _pak, gpak_error_handler_t _error_handler);
+	GPAK_API void gpak_set_process_handler(gpak_t* _pak, gpak_progress_handler_t _progress_handler);
+
 	GPAK_API void gpak_set_compression_algorithm(gpak_t* _pak, int _algorithm);
 	GPAK_API void gpak_set_compression_level(gpak_t* _pak, int _level);
 	GPAK_API void gpak_set_encryption_mode(gpak_t* _pak, int _mode);

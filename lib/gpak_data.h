@@ -121,8 +121,15 @@ enum gpak_mode_flag
 };
 typedef enum gpak_mode_flag gpak_mode_flag_t;
 
-typedef void (*gpak_error_handler_t)(int, const char*);
-typedef void (*gpak_progress_handler_t)(size_t, size_t);
+enum gpak_stage_flag
+{
+	GPAK_STAGE_COMPRESSION,
+	GPAK_STAGE_DECOMPRESSION
+};
+typedef enum gpak_stage_flag gpak_stage_flag_t;
+
+typedef void (*gpak_error_handler_t)(int, void*);
+typedef void (*gpak_progress_handler_t)(size_t, size_t, int32_t, void*);
 
 struct gpak
 {
@@ -132,8 +139,9 @@ struct gpak
 	char* password_;
 	struct filesystem_tree_node* root_;
 	int last_error_;
-	gpak_error_handler_t* error_handler_;
-	gpak_progress_handler_t* progress_handler_;
+	gpak_error_handler_t error_handler_;
+	gpak_progress_handler_t progress_handler_;
+	void* user_data_;
 };
 typedef struct gpak gpak_t;
 
