@@ -39,19 +39,10 @@ enum gpak_compression_zstd
 };
 typedef enum gpak_compression_zstd gpak_compression_zstd_t;
 
-enum gpak_header_encryption_mode
-{
-	GPAK_HEADER_ENCRYPTION_NONE = 0,
-	GPAK_HEADER_ENCRYPTION_AES128 = 1 << 0,
-	GPAK_HEADER_ENCRYPTION_AES256 = 1 << 1
-};
-typedef enum gpak_header_encryption_mode gpak_header_encryption_mode_t;
-
 struct gpak_header
 {
 	char format_[5];
 	gpak_header_compression_algorithm_t compression_;
-	gpak_header_encryption_mode_t encryption_;
 	char compression_level_;
 	uint32_t entry_count_;
 	uint32_t dictionary_size_;
@@ -141,7 +132,6 @@ struct gpak
 	int mode_;
 	pak_header_t header_;
 	FILE* stream_;
-	char* password_;
 	struct filesystem_tree_node* root_;
 	int last_error_;
 	char* dictionary_;

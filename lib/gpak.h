@@ -17,8 +17,6 @@ extern "C" {
 
 	GPAK_API void gpak_set_compression_algorithm(gpak_t* _pak, int _algorithm);
 	GPAK_API void gpak_set_compression_level(gpak_t* _pak, int _level);
-	GPAK_API void gpak_set_encryption_mode(gpak_t* _pak, int _mode);
-	GPAK_API void gpak_set_encryption_password(gpak_t* _pak, const char* _password);
 
 	GPAK_API int gpak_add_directory(gpak_t* _pak, const char* _internal_path);
 	GPAK_API int gpak_add_file(gpak_t* _pak, const char* _external_path, const char* _internal_path);

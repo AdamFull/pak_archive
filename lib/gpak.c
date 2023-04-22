@@ -14,10 +14,6 @@
 #include "gpak_compressors.h"
 #include "gpak_helper.h"
 
-// Openssl
-#include <openssl/aes.h>
-#include <openssl/rand.h>
-
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 //---------------------------------HELPERS--------------------------------
@@ -30,7 +26,6 @@ pak_header_t _pak_make_header()
 
 	strcpy(_header.format_, "gpak\0");
 	_header.compression_ = GPAK_HEADER_COMPRESSION_NONE;
-	_header.encryption_ = GPAK_HEADER_ENCRYPTION_NONE;
 	_header.compression_level_ = 0;
 	_header.entry_count_ = 0u;
 	_header.dictionary_size_ = 0u;
@@ -120,45 +115,6 @@ int _update_pak_header(gpak_t* _pak)
 		fseek(_pak->stream_, 0l, SEEK_END);
 		return _gpak_make_error(_pak, GPAK_ERROR_WRITE);
 	}
-
-	return GPAK_ERROR_OK;
-}
-
-
-//-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-//-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-//-------------------------------ENCRYPTION-------------------------------
-//-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-//-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-int _gpak_encrypt_stream_aes(gpak_t* _pak, FILE* _file)
-{
-	size_t _key_len = strlen(_pak->password_);
-	char* iv = (char*)malloc(_key_len);
-	RAND_bytes(iv, _key_len);
-
-	AES_KEY aesKey;
-	AES_set_encrypt_key(_pak->password_, _key_len * 8, &aesKey);
-
-	char _buffer[_DEFAULT_BLOCK_SIZE];
-	char _bufferout[_DEFAULT_BLOCK_SIZE];
-	size_t _readed = 0ull;
-
-	do
-	{
-		_readed = _freadb(_buffer, 1ull, sizeof(_buffer), _file);
-
-		if (_readed < sizeof(_buffer))
-		{
-			int padding = sizeof(_buffer) - _readed;
-			memset(_buffer + _readed, padding, padding);
-		}
-
-		AES_cbc_encrypt(_buffer, _bufferout, sizeof(_buffer), &aesKey, iv, AES_ENCRYPT);
-
-		_fwriteb(_bufferout, 1ull, _readed, _pak->stream_);
-	} while (_readed);
-
-	free(iv);
 
 	return GPAK_ERROR_OK;
 }
@@ -339,7 +295,6 @@ int gpak_close(gpak_t* _pak)
 			fclose(_pak->stream_);
 		}
 		
-		free(_pak->password_);
 		free(_pak->dictionary_);
 		free(_pak);
 		return _gpak_make_error(_pak, GPAK_ERROR_OK);
@@ -371,16 +326,6 @@ void gpak_set_compression_algorithm(gpak_t* _pak, int _algorithm)
 void gpak_set_compression_level(gpak_t* _pak, int _level)
 {
 	_pak->header_.compression_level_ = _level;
-}
-
-void gpak_set_encryption_mode(gpak_t* _pak, int _mode)
-{
-	_pak->header_.encryption_ = _mode;
-}
-
-void gpak_set_encryption_password(gpak_t* _pak, const char* _password)
-{
-	_pak->password_ = strdup(_password);
 }
 
 int gpak_add_directory(gpak_t* _pak, const char* _internal_path)
