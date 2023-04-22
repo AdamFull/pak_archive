@@ -204,7 +204,7 @@ filesystem_tree_file_t* filesystem_tree_find_file(filesystem_tree_node_t* _root,
             }
 
             current = found;
-            dir_name = strtok(NULL, "/");
+            dir_name = file_name;
         }
         else
             break;

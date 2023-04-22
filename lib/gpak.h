@@ -1,5 +1,5 @@
-#ifndef gpak_H
-#define gpak_H
+#ifndef GPAK_LIB_H
+#define GPAK_LIB_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,4 +42,4 @@ extern "C" {
 }
 #endif
 
-#endif // gpak_H
+#endif // GPAK_LIB_H

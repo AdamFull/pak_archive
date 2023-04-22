@@ -54,6 +54,7 @@ struct gpak_header
 	gpak_header_encryption_mode_t encryption_;
 	char compression_level_;
 	uint32_t entry_count_;
+	uint32_t dictionary_size_;
 };
 typedef struct gpak_header pak_header_t;
 
@@ -108,7 +109,11 @@ enum gpak_error
 	GPAK_ERROR_EOF_BEFORE_EOS = -21,
 
 	//crc
-	GPAK_ERROR_FILE_CRC_NOT_MATCH = -22
+	GPAK_ERROR_FILE_CRC_NOT_MATCH = -22,
+
+	// dictionary
+	GPAK_ERROR_INVALID_DICTIONARY = -23,
+	GPAK_ERROR_FAILED_TO_CREATE_DICTIONARY = -24
 };
 typedef enum gpak_error gpak_error_t;
 
@@ -128,8 +133,8 @@ enum gpak_stage_flag
 };
 typedef enum gpak_stage_flag gpak_stage_flag_t;
 
-typedef void (*gpak_error_handler_t)(int, void*);
-typedef void (*gpak_progress_handler_t)(size_t, size_t, int32_t, void*);
+typedef void (*gpak_error_handler_t)(const char*, int32_t, void*);
+typedef void (*gpak_progress_handler_t)(const char*, size_t, size_t, int32_t, void*);
 
 struct gpak
 {
@@ -139,6 +144,8 @@ struct gpak
 	char* password_;
 	struct filesystem_tree_node* root_;
 	int last_error_;
+	char* dictionary_;
+	char* current_file_;
 	gpak_error_handler_t error_handler_;
 	gpak_progress_handler_t progress_handler_;
 	void* user_data_;
