@@ -89,36 +89,51 @@ Building the Project</h1>
 Example Usage</h1>
 <h2><a class="anchor" id="autotoc_md4"></a>
 Creating an archive and adding files</h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;gpak.h&quot;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="gpak_8h.html">gpak.h</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">gpak_t *pak = gpak_create(<span class="stringliteral">&quot;example.gpak&quot;</span>, GPAK_MODE_CREATE);</div>
-<div class="line">gpak_set_compression_algorithm(pak, GPAK_HEADER_COMPRESSION_ZST);</div>
-<div class="line">gpak_set_compression_level(pak, 22);</div>
+<div class="line"><a class="code" href="structgpak.html">gpak_t</a> *pak = gpak_create(<span class="stringliteral">&quot;example.gpak&quot;</span>, <a class="code" href="gpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a.html#a143b4594e232ecc7591f5f76d6268e7aa17ffddbcf41457926de14e136dd88806">GPAK_MODE_CREATE</a>);</div>
+<div class="line"><a class="code" href="gpak_8h_a2d0a06b00f05d059ba6936870df571d4.html#a2d0a06b00f05d059ba6936870df571d4">gpak_set_compression_algorithm</a>(pak, <a class="code" href="gpak__data_8h_a09cad1e53cbc38054778cc94241b683f.html#a09cad1e53cbc38054778cc94241b683fa0eb4294007f3b9ddbbfcea4976e68965">GPAK_HEADER_COMPRESSION_ZST</a>);</div>
+<div class="line"><a class="code" href="gpak_8h_aa4bcf262947889023adf0f29d19edca4.html#aa4bcf262947889023adf0f29d19edca4">gpak_set_compression_level</a>(pak, 22);</div>
 <div class="line"> </div>
-<div class="line">gpak_add_file(pak, <span class="stringliteral">&quot;external/path/to/file/file1.txt&quot;</span>, <span class="stringliteral">&quot;internal/path/to/file/file1.txt&quot;</span>);</div>
-<div class="line">gpak_add_file(pak, <span class="stringliteral">&quot;external/path/to/file/file2.txt&quot;</span>, <span class="stringliteral">&quot;internal/path/to/file/file2.txt&quot;</span>);</div>
-<div class="line">gpak_close(pak);</div>
+<div class="line"><a class="code" href="gpak_8h_a3782b8893e3619ee421f1fb6c4ec632a.html#a3782b8893e3619ee421f1fb6c4ec632a">gpak_add_file</a>(pak, <span class="stringliteral">&quot;external/path/to/file/file1.txt&quot;</span>, <span class="stringliteral">&quot;internal/path/to/file/file1.txt&quot;</span>);</div>
+<div class="line"><a class="code" href="gpak_8h_a3782b8893e3619ee421f1fb6c4ec632a.html#a3782b8893e3619ee421f1fb6c4ec632a">gpak_add_file</a>(pak, <span class="stringliteral">&quot;external/path/to/file/file2.txt&quot;</span>, <span class="stringliteral">&quot;internal/path/to/file/file2.txt&quot;</span>);</div>
+<div class="line"><a class="code" href="gpak_8h_a680d2940a374d0ab012f7ff1240e1be8.html#a680d2940a374d0ab012f7ff1240e1be8">gpak_close</a>(pak);</div>
 <div class="line"><span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
+<div class="ttc" id="agpak_8h_a2d0a06b00f05d059ba6936870df571d4_html_a2d0a06b00f05d059ba6936870df571d4"><div class="ttname"><a href="gpak_8h_a2d0a06b00f05d059ba6936870df571d4.html#a2d0a06b00f05d059ba6936870df571d4">gpak_set_compression_algorithm</a></div><div class="ttdeci">GPAK_API void gpak_set_compression_algorithm(gpak_t *_pak, int _algorithm)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00321">gpak.c:321</a></div></div>
+<div class="ttc" id="agpak_8h_a3782b8893e3619ee421f1fb6c4ec632a_html_a3782b8893e3619ee421f1fb6c4ec632a"><div class="ttname"><a href="gpak_8h_a3782b8893e3619ee421f1fb6c4ec632a.html#a3782b8893e3619ee421f1fb6c4ec632a">gpak_add_file</a></div><div class="ttdeci">GPAK_API int gpak_add_file(gpak_t *_pak, const char *_external_path, const char *_internal_path)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00337">gpak.c:337</a></div></div>
+<div class="ttc" id="agpak_8h_a680d2940a374d0ab012f7ff1240e1be8_html_a680d2940a374d0ab012f7ff1240e1be8"><div class="ttname"><a href="gpak_8h_a680d2940a374d0ab012f7ff1240e1be8.html#a680d2940a374d0ab012f7ff1240e1be8">gpak_close</a></div><div class="ttdeci">GPAK_API int gpak_close(gpak_t *_pak)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00274">gpak.c:274</a></div></div>
+<div class="ttc" id="agpak_8h_aa4bcf262947889023adf0f29d19edca4_html_aa4bcf262947889023adf0f29d19edca4"><div class="ttname"><a href="gpak_8h_aa4bcf262947889023adf0f29d19edca4.html#aa4bcf262947889023adf0f29d19edca4">gpak_set_compression_level</a></div><div class="ttdeci">GPAK_API void gpak_set_compression_level(gpak_t *_pak, int _level)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00326">gpak.c:326</a></div></div>
+<div class="ttc" id="agpak_8h_html"><div class="ttname"><a href="gpak_8h.html">gpak.h</a></div></div>
+<div class="ttc" id="agpak__data_8h_a09cad1e53cbc38054778cc94241b683f_html_a09cad1e53cbc38054778cc94241b683fa0eb4294007f3b9ddbbfcea4976e68965"><div class="ttname"><a href="gpak__data_8h_a09cad1e53cbc38054778cc94241b683f.html#a09cad1e53cbc38054778cc94241b683fa0eb4294007f3b9ddbbfcea4976e68965">GPAK_HEADER_COMPRESSION_ZST</a></div><div class="ttdeci">@ GPAK_HEADER_COMPRESSION_ZST</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00038">gpak_data.h:37</a></div></div>
+<div class="ttc" id="agpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a_html_a143b4594e232ecc7591f5f76d6268e7aa17ffddbcf41457926de14e136dd88806"><div class="ttname"><a href="gpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a.html#a143b4594e232ecc7591f5f76d6268e7aa17ffddbcf41457926de14e136dd88806">GPAK_MODE_CREATE</a></div><div class="ttdeci">@ GPAK_MODE_CREATE</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00208">gpak_data.h:208</a></div></div>
+<div class="ttc" id="astructgpak_html"><div class="ttname"><a href="structgpak.html">gpak</a></div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00256">gpak_data.h:257</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
 Opening an archive and reading a file</h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;gpak.h&quot;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="gpak_8h.html">gpak.h</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">gpak_t *pak = gpak_open(<span class="stringliteral">&quot;example.gpak&quot;</span>, GPAK_MODE_READ_ONLY);</div>
-<div class="line">gpak_file_t *file = gpak_fopen(pak, <span class="stringliteral">&quot;file1.txt&quot;</span>);</div>
+<div class="line"><a class="code" href="structgpak.html">gpak_t</a> *pak = <a class="code" href="gpak_8h_a4532ae96d178844419e6298b88a55ce9.html#a4532ae96d178844419e6298b88a55ce9">gpak_open</a>(<span class="stringliteral">&quot;example.gpak&quot;</span>, <a class="code" href="gpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a.html#a143b4594e232ecc7591f5f76d6268e7aa108022d7e49faba7b4042d8a50c8f6ef">GPAK_MODE_READ_ONLY</a>);</div>
+<div class="line"><a class="code" href="structgpak__file.html">gpak_file_t</a> *file = <a class="code" href="gpak_8h_aa66d24c528ce034f5de99ed96034e984.html#aa66d24c528ce034f5de99ed96034e984">gpak_fopen</a>(pak, <span class="stringliteral">&quot;file1.txt&quot;</span>);</div>
 <div class="line"><span class="keywordflow">if</span> (file) {</div>
 <div class="line"><span class="keywordtype">char</span> buffer[256];</div>
-<div class="line"><span class="keywordflow">while</span> (!gpak_feof(file)) {</div>
-<div class="line">gpak_fgets(file, buffer, <span class="keyword">sizeof</span>(buffer));</div>
+<div class="line"><span class="keywordflow">while</span> (!<a class="code" href="gpak_8h_a304c49e277e3c1bf84d50fa7b5187a62.html#a304c49e277e3c1bf84d50fa7b5187a62">gpak_feof</a>(file)) {</div>
+<div class="line"><a class="code" href="gpak_8h_a4ee7a07b3a0903df64d3106a36eb1853.html#a4ee7a07b3a0903df64d3106a36eb1853">gpak_fgets</a>(file, buffer, <span class="keyword">sizeof</span>(buffer));</div>
 <div class="line">printf(<span class="stringliteral">&quot;%s&quot;</span>, buffer);</div>
 <div class="line">}</div>
-<div class="line">gpak_fclose(file);</div>
+<div class="line"><a class="code" href="gpak_8h_af268ceaf7620d320a3c01cc4c2e16813.html#af268ceaf7620d320a3c01cc4c2e16813">gpak_fclose</a>(file);</div>
 <div class="line">}</div>
-<div class="line">gpak_close(pak);</div>
+<div class="line"><a class="code" href="gpak_8h_a680d2940a374d0ab012f7ff1240e1be8.html#a680d2940a374d0ab012f7ff1240e1be8">gpak_close</a>(pak);</div>
 <div class="line"><span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
+<div class="ttc" id="agpak_8h_a304c49e277e3c1bf84d50fa7b5187a62_html_a304c49e277e3c1bf84d50fa7b5187a62"><div class="ttname"><a href="gpak_8h_a304c49e277e3c1bf84d50fa7b5187a62.html#a304c49e277e3c1bf84d50fa7b5187a62">gpak_feof</a></div><div class="ttdeci">GPAK_API long gpak_feof(gpak_file_t *_file)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00450">gpak.c:450</a></div></div>
+<div class="ttc" id="agpak_8h_a4532ae96d178844419e6298b88a55ce9_html_a4532ae96d178844419e6298b88a55ce9"><div class="ttname"><a href="gpak_8h_a4532ae96d178844419e6298b88a55ce9.html#a4532ae96d178844419e6298b88a55ce9">gpak_open</a></div><div class="ttdeci">GPAK_API gpak_t * gpak_open(const char *_path, int _mode)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00215">gpak.c:215</a></div></div>
+<div class="ttc" id="agpak_8h_a4ee7a07b3a0903df64d3106a36eb1853_html_a4ee7a07b3a0903df64d3106a36eb1853"><div class="ttname"><a href="gpak_8h_a4ee7a07b3a0903df64d3106a36eb1853.html#a4ee7a07b3a0903df64d3106a36eb1853">gpak_fgets</a></div><div class="ttdeci">GPAK_API char * gpak_fgets(gpak_file_t *_file, char *_buffer, int _max)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00425">gpak.c:425</a></div></div>
+<div class="ttc" id="agpak_8h_aa66d24c528ce034f5de99ed96034e984_html_aa66d24c528ce034f5de99ed96034e984"><div class="ttname"><a href="gpak_8h_aa66d24c528ce034f5de99ed96034e984.html#aa66d24c528ce034f5de99ed96034e984">gpak_fopen</a></div><div class="ttdeci">GPAK_API gpak_file_t * gpak_fopen(gpak_t *_pak, const char *_path)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00372">gpak.c:372</a></div></div>
+<div class="ttc" id="agpak_8h_af268ceaf7620d320a3c01cc4c2e16813_html_af268ceaf7620d320a3c01cc4c2e16813"><div class="ttname"><a href="gpak_8h_af268ceaf7620d320a3c01cc4c2e16813.html#af268ceaf7620d320a3c01cc4c2e16813">gpak_fclose</a></div><div class="ttdeci">GPAK_API void gpak_fclose(gpak_file_t *_file)</div><div class="ttdef"><b>Definition:</b> <a href="gpak_8c_source.html#l00455">gpak.c:455</a></div></div>
+<div class="ttc" id="agpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a_html_a143b4594e232ecc7591f5f76d6268e7aa108022d7e49faba7b4042d8a50c8f6ef"><div class="ttname"><a href="gpak__data_8h_a143b4594e232ecc7591f5f76d6268e7a.html#a143b4594e232ecc7591f5f76d6268e7aa108022d7e49faba7b4042d8a50c8f6ef">GPAK_MODE_READ_ONLY</a></div><div class="ttdeci">@ GPAK_MODE_READ_ONLY</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00209">gpak_data.h:209</a></div></div>
+<div class="ttc" id="astructgpak__file_html"><div class="ttname"><a href="structgpak__file.html">gpak_file</a></div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00283">gpak_data.h:284</a></div></div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md6"></a>
 Documentation</h1>
 <p>You can find documentation here <a href="https://adamfull.github.io/pak_archive/">https://adamfull.github.io/pak_archive/</a></p>
