@@ -1,6 +1,8 @@
 # GPAK - Game Pack Archive Library
 GPAK is a C library for creating, reading, and manipulating game archive files. It provides an API for working with game assets, making it easy to manage large collections of files within a game project.
 
+[![CMake Build and Test](https://github.com/adamfull/pak_archive/actions/workflows/build_test.yml/badge.svg)](https://github.com/adamfull/pak_archive/actions/workflows/build_test.yml)
+
 ## Features
 - Supports multiple compression algorithms (None, Deflate, LZ4, ZSTD)
 - Easy-to-use API for creating, opening, and modifying archives
