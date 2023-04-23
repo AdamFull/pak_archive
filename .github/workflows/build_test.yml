@@ -37,7 +37,7 @@ jobs:
       run: mkdir -p build
 
     - name: Configure CMake
-      run: cmake -B build -DBUILD_TESTS=ON -DBUILD_PACKER_TOOL=ON
+      run: cmake -B build -DBUILD_TESTS=ON
 
     - name: Build project
       run: cmake --build build
