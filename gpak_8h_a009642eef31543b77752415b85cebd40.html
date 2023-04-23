@@ -133,13 +133,13 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to the found file node or NULL if not found. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak_8c_source.html#l00364">364</a> of file <a class="el" href="gpak_8c_source.html">gpak.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;{</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordflow">if</span> (_pak == NULL)</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="filesystem__tree_8h_af6d8f12ab561f9df6b83fdf127071ed8.html#af6d8f12ab561f9df6b83fdf127071ed8">filesystem_tree_find_file</a>(_pak-&gt;<a class="code" href="structgpak_a1bb7928443892b61d98a3cf75fcb684c.html#a1bb7928443892b61d98a3cf75fcb684c">root_</a>, _path);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="gpak_8c_source.html#l00383">383</a> of file <a class="el" href="gpak_8c_source.html">gpak.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;{</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="keywordflow">if</span> (_pak == NULL)</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160; </div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="filesystem__tree_8h_af6d8f12ab561f9df6b83fdf127071ed8.html#af6d8f12ab561f9df6b83fdf127071ed8">filesystem_tree_find_file</a>(_pak-&gt;<a class="code" href="structgpak_a1bb7928443892b61d98a3cf75fcb684c.html#a1bb7928443892b61d98a3cf75fcb684c">root_</a>, _path);</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;}</div>
 <div class="ttc" id="afilesystem__tree_8h_af6d8f12ab561f9df6b83fdf127071ed8_html_af6d8f12ab561f9df6b83fdf127071ed8"><div class="ttname"><a href="filesystem__tree_8h_af6d8f12ab561f9df6b83fdf127071ed8.html#af6d8f12ab561f9df6b83fdf127071ed8">filesystem_tree_find_file</a></div><div class="ttdeci">GPAK_API filesystem_tree_file_t * filesystem_tree_find_file(filesystem_tree_node_t *_root, const char *_path)</div><div class="ttdef"><b>Definition:</b> <a href="filesystem__tree_8c_source.html#l00185">filesystem_tree.c:185</a></div></div>
 <div class="ttc" id="astructgpak_a1bb7928443892b61d98a3cf75fcb684c_html_a1bb7928443892b61d98a3cf75fcb684c"><div class="ttname"><a href="structgpak_a1bb7928443892b61d98a3cf75fcb684c.html#a1bb7928443892b61d98a3cf75fcb684c">gpak::root_</a></div><div class="ttdeci">struct filesystem_tree_node * root_</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00261">gpak_data.h:261</a></div></div>
 </div><!-- fragment -->
