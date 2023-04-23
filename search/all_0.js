@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['child_5findex_5f_0',['child_index_',['../structfilesystem__iterator__state_a06c265ce4760e12d999fd77a712c38ff.html#a06c265ce4760e12d999fd77a712c38ff',1,'filesystem_iterator_state']]],
-  ['children_5f_1',['children_',['../structfilesystem__tree__node_a792ffb6bb35d0304d13f1f5f3e680abb.html#a792ffb6bb35d0304d13f1f5f3e680abb',1,'filesystem_tree_node']]],
-  ['compressed_5fsize_5f_2',['compressed_size_',['../structgpak__entry__header_aa1fd58a53a5ae62cb946643e0655fee4.html#aa1fd58a53a5ae62cb946643e0655fee4',1,'gpak_entry_header']]],
-  ['compression_5f_3',['compression_',['../structgpak__header_ad342997a8144531318e005c6771fbb33.html#ad342997a8144531318e005c6771fbb33',1,'gpak_header']]],
-  ['compression_5flevel_5f_4',['compression_level_',['../structgpak__header_aa709bc91ae52b6a48063e910f1b28364.html#aa709bc91ae52b6a48063e910f1b28364',1,'gpak_header']]],
-  ['crc32_5f_5',['crc32_',['../structgpak__entry__header_a6b1313da3bf867d8e33b91debfb49c4b.html#a6b1313da3bf867d8e33b91debfb49c4b',1,'gpak_entry_header::crc32_()'],['../structgpak__file_aa436d4f08abb64742fed97cf33d5d975.html#aa436d4f08abb64742fed97cf33d5d975',1,'gpak_file::crc32_()']]],
-  ['current_5ffile_5f_6',['current_file_',['../structgpak_a176c477a6819ba686afbfab49bdf32cf.html#a176c477a6819ba686afbfab49bdf32cf',1,'gpak']]]
+  ['_5fgpak_5fcompressor_5fdeflate_0',['_gpak_compressor_deflate',['../gpak__compressors_8h_a0e71e0ce8c134e99ed32e378271dc2b1.html#a0e71e0ce8c134e99ed32e378271dc2b1',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fgenerate_5fdictionary_1',['_gpak_compressor_generate_dictionary',['../gpak__compressors_8h_aa524ac601c498d60f28b0edade120f6c.html#aa524ac601c498d60f28b0edade120f6c',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5flz4_2',['_gpak_compressor_lz4',['../gpak__compressors_8h_aa6473cd2e982edba7a3ddeae207cfd44.html#aa6473cd2e982edba7a3ddeae207cfd44',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fnone_3',['_gpak_compressor_none',['../gpak__compressors_8h_a2b5eab12e10ca3ea239293308e34092a.html#a2b5eab12e10ca3ea239293308e34092a',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fzstd_4',['_gpak_compressor_zstd',['../gpak__compressors_8h_ae4f294d01064148ab1a7961424399380.html#ae4f294d01064148ab1a7961424399380',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5finflate_5',['_gpak_decompressor_inflate',['../gpak__compressors_8h_a7722d30b2d03b0973fcc117ac0f735da.html#a7722d30b2d03b0973fcc117ac0f735da',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5flz4_6',['_gpak_decompressor_lz4',['../gpak__compressors_8h_a99e7562923c0a6afa78348d4ed17961c.html#a99e7562923c0a6afa78348d4ed17961c',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5fnone_7',['_gpak_decompressor_none',['../gpak__compressors_8h_a37131971ff299a0a9089f9d230680be1.html#a37131971ff299a0a9089f9d230680be1',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5fzstd_8',['_gpak_decompressor_zstd',['../gpak__compressors_8h_a96e8c54fa56d23af7c4db4f08b45c273.html#a96e8c54fa56d23af7c4db4f08b45c273',1,'gpak_compressors.c']]]
 ];

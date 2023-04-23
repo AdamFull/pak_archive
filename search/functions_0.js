@@ -1,16 +1,12 @@
 var searchData=
 [
-  ['filesystem_5fiterator_5fcreate_65',['filesystem_iterator_create',['../filesystem__tree_8h_adef02d72fbf83d4439fdeb46ad2046b7.html#adef02d72fbf83d4439fdeb46ad2046b7',1,'filesystem_tree.c']]],
-  ['filesystem_5fiterator_5ffree_66',['filesystem_iterator_free',['../filesystem__tree_8h_a7ed50eb04292bb63b693070527cedd09.html#a7ed50eb04292bb63b693070527cedd09',1,'filesystem_tree.c']]],
-  ['filesystem_5fiterator_5fnext_5fdirectory_67',['filesystem_iterator_next_directory',['../filesystem__tree_8h_a6080a916414d90939dd7cbc37b247182.html#a6080a916414d90939dd7cbc37b247182',1,'filesystem_tree.c']]],
-  ['filesystem_5fiterator_5fnext_5ffile_68',['filesystem_iterator_next_file',['../filesystem__tree_8h_ae21beb8f0c9e5b29652cb5f21845f3df.html#ae21beb8f0c9e5b29652cb5f21845f3df',1,'filesystem_tree.c']]],
-  ['filesystem_5fiterator_5fnext_5fsubling_5fdirectory_69',['filesystem_iterator_next_subling_directory',['../filesystem__tree_8h_a2778e1b465b5561c8f1b6f421ae9e241.html#a2778e1b465b5561c8f1b6f421ae9e241',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5fadd_5fdirectory_70',['filesystem_tree_add_directory',['../filesystem__tree_8h_ace24a3424eed6c5ad42b6952b398cffc.html#ace24a3424eed6c5ad42b6952b398cffc',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5fadd_5ffile_71',['filesystem_tree_add_file',['../filesystem__tree_8h_abedb05d6f56c769e6cda95e4f2b478cb.html#abedb05d6f56c769e6cda95e4f2b478cb',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5fcreate_72',['filesystem_tree_create',['../filesystem__tree_8h_a5e7cb082ee0d6dfa824f26fede465b82.html#a5e7cb082ee0d6dfa824f26fede465b82',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5fdelete_73',['filesystem_tree_delete',['../filesystem__tree_8h_a9e56f214ca3134e93a4dbb05a28a9e8f.html#a9e56f214ca3134e93a4dbb05a28a9e8f',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5fdirectory_5fpath_74',['filesystem_tree_directory_path',['../filesystem__tree_8h_ab826c5e68381c0be771d8daccc69ba0c.html#ab826c5e68381c0be771d8daccc69ba0c',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5ffile_5fpath_75',['filesystem_tree_file_path',['../filesystem__tree_8h_a2d39a4107bc44c7e77cfabf25a507f54.html#a2d39a4107bc44c7e77cfabf25a507f54',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5ffind_5fdirectory_76',['filesystem_tree_find_directory',['../filesystem__tree_8h_a13f3a5e064eec9a8eb285375e80b8dd7.html#a13f3a5e064eec9a8eb285375e80b8dd7',1,'filesystem_tree.c']]],
-  ['filesystem_5ftree_5ffind_5ffile_77',['filesystem_tree_find_file',['../filesystem__tree_8h_af6d8f12ab561f9df6b83fdf127071ed8.html#af6d8f12ab561f9df6b83fdf127071ed8',1,'filesystem_tree.c']]]
+  ['_5fgpak_5fcompressor_5fdeflate_171',['_gpak_compressor_deflate',['../gpak__compressors_8h_a0e71e0ce8c134e99ed32e378271dc2b1.html#a0e71e0ce8c134e99ed32e378271dc2b1',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fgenerate_5fdictionary_172',['_gpak_compressor_generate_dictionary',['../gpak__compressors_8h_aa524ac601c498d60f28b0edade120f6c.html#aa524ac601c498d60f28b0edade120f6c',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5flz4_173',['_gpak_compressor_lz4',['../gpak__compressors_8h_aa6473cd2e982edba7a3ddeae207cfd44.html#aa6473cd2e982edba7a3ddeae207cfd44',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fnone_174',['_gpak_compressor_none',['../gpak__compressors_8h_a2b5eab12e10ca3ea239293308e34092a.html#a2b5eab12e10ca3ea239293308e34092a',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fcompressor_5fzstd_175',['_gpak_compressor_zstd',['../gpak__compressors_8h_ae4f294d01064148ab1a7961424399380.html#ae4f294d01064148ab1a7961424399380',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5finflate_176',['_gpak_decompressor_inflate',['../gpak__compressors_8h_a7722d30b2d03b0973fcc117ac0f735da.html#a7722d30b2d03b0973fcc117ac0f735da',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5flz4_177',['_gpak_decompressor_lz4',['../gpak__compressors_8h_a99e7562923c0a6afa78348d4ed17961c.html#a99e7562923c0a6afa78348d4ed17961c',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5fnone_178',['_gpak_decompressor_none',['../gpak__compressors_8h_a37131971ff299a0a9089f9d230680be1.html#a37131971ff299a0a9089f9d230680be1',1,'gpak_compressors.c']]],
+  ['_5fgpak_5fdecompressor_5fzstd_179',['_gpak_decompressor_zstd',['../gpak__compressors_8h_a96e8c54fa56d23af7c4db4f08b45c273.html#a96e8c54fa56d23af7c4db4f08b45c273',1,'gpak_compressors.c']]]
 ];

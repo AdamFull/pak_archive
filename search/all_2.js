@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['entry_5f_10',['entry_',['../structfilesystem__tree__file_a2dd4e6324f6d16cf110822ff552f5f1c.html#a2dd4e6324f6d16cf110822ff552f5f1c',1,'filesystem_tree_file']]],
-  ['entry_5fcount_5f_11',['entry_count_',['../structgpak__header_a462825a0b50f6655b2dad78353b029c7.html#a462825a0b50f6655b2dad78353b029c7',1,'gpak_header']]],
-  ['error_5fhandler_5f_12',['error_handler_',['../structgpak_a74772daf53861a98eff634274577e26d.html#a74772daf53861a98eff634274577e26d',1,'gpak']]]
+  ['data_5f_16',['data_',['../structgpak__file_af83ae856b7e93a6ed0f108d1df6274c5.html#af83ae856b7e93a6ed0f108d1df6274c5',1,'gpak_file']]],
+  ['dictionary_5f_17',['dictionary_',['../structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc',1,'gpak']]],
+  ['dictionary_5fsize_5f_18',['dictionary_size_',['../structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c',1,'gpak_header']]]
 ];
