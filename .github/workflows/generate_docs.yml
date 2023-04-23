@@ -1,0 +1,26 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - main  # Replace with your primary branch name, if different
+
+jobs:
+  generate_docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Doxygen
+      run: sudo apt-get install doxygen
+
+    - name: Generate documentation
+      run: doxygen gpak.doxyfile
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./doc/html

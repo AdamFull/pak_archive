@@ -318,25 +318,42 @@ struct filesystem_tree_node
 typedef struct filesystem_tree_node filesystem_tree_node_t;
 
 
+/**
+ * @brief Structure representing the state of a filesystem iterator.
+ *
+ * This structure contains information about the current state of a filesystem iterator, including the current node, child index, and file index.
+ */
 struct filesystem_iterator_state
 {
-	filesystem_tree_node_t* node_;
-	size_t child_index_;
-	size_t file_index_;
-};
-typedef struct filesystem_iterator_state filesystem_iterator_state_t;
-
-
-struct filesystem_tree_iterator
-{
-	filesystem_iterator_state_t* stack_;
-	size_t stack_size_;
-	size_t stack_capacity_;
+	filesystem_tree_node_t* node_; /**< The current node in the filesystem tree being iterated. */
+	size_t child_index_; /**< The index of the current child directory node in the current node of the filesystem tree. */
+	size_t file_index_; /**< The index of the current file in the current directory node of the filesystem tree. */
 };
 
 /**
- * @struct filesystem_tree_iterator_t
- * @brief A structure representing an iterator for the filesystem tree.
+ * @brief Typedef for the filesystem_iterator_state structure.
+ *
+ * This typedef is used to create an alias for the filesystem_iterator_state structure, providing a more convenient way to use the structure in the code.
+ */
+typedef struct filesystem_iterator_state filesystem_iterator_state_t;
+
+
+/**
+ * @brief Structure representing a filesystem tree iterator.
+ *
+ * This structure contains information about a filesystem tree iterator, including a stack of iterator states, the current stack size, and stack capacity.
+ */
+struct filesystem_tree_iterator
+{
+	filesystem_iterator_state_t* stack_; /**< A dynamic array of filesystem iterator states representing the stack for the iterator. */
+	size_t stack_size_; /**< The current size of the stack, indicating the number of elements in the stack. */
+	size_t stack_capacity_; /**< The maximum capacity of the stack, indicating the maximum number of elements that can be stored in the stack without resizing. */
+};
+
+/**
+ * @brief Typedef for the filesystem_tree_iterator structure.
+ *
+ * This typedef is used to create an alias for the filesystem_tree_iterator structure, providing a more convenient way to use the structure in the code.
  */
 typedef struct filesystem_tree_iterator filesystem_tree_iterator_t;
 
