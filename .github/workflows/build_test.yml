@@ -20,13 +20,24 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake zlib1g-dev 
+        sudo apt-get install -y cmake build-essential zlib1g-dev 
+
+    - name: Checkout GTest
+      run: |
+        git clone https://github.com/google/googletest.git
+        cd googletest
+        git checkout release-1.11.0
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
 
     - name: Create build directory
       run: mkdir -p build
 
     - name: Configure CMake
-      run: cmake -B build -DBUILD_TESTS=ON -BUILD_PACKER_TOOL=ON
+      run: cmake -B build -DBUILD_TESTS=ON -DBUILD_PACKER_TOOL=ON
 
     - name: Build project
       run: cmake --build build
