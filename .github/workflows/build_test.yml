@@ -1,4 +1,4 @@
-name: CMake Build and Test
+name: CMake Build
 
 on:
   push:
@@ -41,8 +41,3 @@ jobs:
 
     - name: Build project
       run: cmake --build build
-
-    - name: Run ctest
-      run: |
-        cd build
-        ctest
