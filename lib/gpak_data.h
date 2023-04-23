@@ -1,3 +1,23 @@
+/**
+ * @file gpak_data.h
+ * @author AdamFull
+ * @date 23.04.2023
+ * @brief The gpak_data.h header file contains all the data structures used by
+ *        the Gpak library API for managing game archives.
+ *
+ * This header file defines the data structures used to represent the internal
+ * organization of a game archive file, including its metadata, file and
+ * directory entries, and the internal file system tree. It also includes
+ * structures for managing iterators and other utility functions.
+ *
+ * These data structures are used throughout the Gpak API to provide users
+ * with the ability to create, manipulate, and extract information from game
+ * archive files.
+ *
+ * To use the Gpak library, simply include this header file along with the main
+ * gpak.h header file and link against the Gpak library in your project.
+ */
+
 #ifndef GPAK_DATA_H
 #define GPAK_DATA_H
 

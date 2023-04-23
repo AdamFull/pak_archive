@@ -1,3 +1,26 @@
+/**
+ * @file gpak_compressors.h
+ * @author AdamFull
+ * @date 23.04.2023
+ * @brief The gpak_compressors.h header file contains methods for compressing
+ *        and decompressing files used in the Gpak library for managing game
+ *        archives.
+ *
+ * This header file defines the compressor and decompressor functions for
+ * various compression algorithms used in the Gpak library. These functions
+ * are responsible for compressing and decompressing data stored within game
+ * archive files, enabling efficient storage and retrieval of game assets.
+ *
+ * The Gpak library supports a variety of compression algorithms, including
+ * (but not limited to): Deflate, LZ4, and Zstd. Additional compression
+ * algorithms can be added by implementing the required compressor and
+ * decompressor functions, and integrating them into the Gpak library.
+ *
+ * To use the compression and decompression functions provided by this header,
+ * include it alongside the main gpak.h header file and link against the Gpak
+ * library in your project.
+ */
+
 #ifndef GPAK_COMPRESSORS_H
 #define GPAK_COMPRESSORS_H
 

@@ -1,6 +1,25 @@
 /**
  * @file filesystem_tree.h
- * @brief Filesystem tree API for managing directories and files.
+ * @author AdamFull
+ * @date 23.04.2023
+ * @brief The filesystem_tree.h header file contains methods and data structures
+ *        for working with a filesystem tree used in the Gpak library for
+ *        managing game archives.
+ *
+ * This header file defines the data structures and functions for representing
+ * and manipulating a filesystem tree used to store files and directories
+ * within a Gpak game archive. It provides an interface for iterating over the
+ * directories and files stored in the archive, allowing for efficient and
+ * organized access to game assets.
+ *
+ * The filesystem tree consists of nodes representing directories and files
+ * within the game archive. Each node can have zero or more child nodes,
+ * representing the contents of a directory. File nodes store the file metadata
+ * and can be used to access the file data stored within the archive.
+ *
+ * To use the filesystem tree functions provided by this header, include it
+ * alongside the main gpak.h header file and link against the Gpak library in
+ * your project.
  */
 
 #ifndef FILESYSTEM_TREE_H

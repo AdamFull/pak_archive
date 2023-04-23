@@ -1,3 +1,25 @@
+/**
+ * @file gpak.h
+ * @author AdamFull
+ * @date 23.04.2023
+ * @brief Gpak (Game Pack) is a file archive library specifically designed for
+ *        game archives, providing functionality for creating, modifying and
+ *        extracting archive files.
+ *
+ * This library allows users to create, read and manipulate game archive files
+ * using a variety of compression algorithms. It provides a simple API
+ * for managing the contents of an archive and supports various
+ * compression methods such as Deflate, LZ4, and ZSTD.
+ *
+ * The gpak.h header file contains the main API for the Gpak library,
+ * including functions for creating and manipulating archives, reading
+ * and writing files within archives, and managing the archive's
+ * metadata.
+ *
+ * To use the Gpak library, simply include this header file and link
+ * against the Gpak library in your project.
+ */
+
 #ifndef GPAK_LIB_H
 #define GPAK_LIB_H
 
