@@ -51,6 +51,8 @@ gpak_close(pak);
 return 0;
 }
 ```
+## Documentation
+You can find documentation here https://adamfull.github.io/pak_archive/
 
 ## Packer Tool
 A command-line interface (CLI) tool for packing and unpacking GPAK archives is included in the packer_tool directory. After building the project, the tool can be found in the build directory as packer_tool.
