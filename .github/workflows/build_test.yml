@@ -1,0 +1,37 @@
+name: CMake Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake zlib1g-dev 
+
+    - name: Create build directory
+      run: mkdir -p build
+
+    - name: Configure CMake
+      run: cmake -B build -DBUILD_TESTS=ON -BUILD_PACKER_TOOL=ON
+
+    - name: Build project
+      run: cmake --build build
+
+    - name: Run ctest
+      run: |
+        cd build
+        ctest

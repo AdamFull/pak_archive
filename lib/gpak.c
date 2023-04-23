@@ -228,6 +228,8 @@ gpak_t* gpak_open(const char* _path, int _mode)
 		open_mode_ = "wb+";
 	else if (_mode & GPAK_MODE_READ_ONLY)
 		open_mode_ = "rb+";
+	else if (_mode & GPAK_MODE_UPDATE)
+		open_mode_ = "ab+";
 	else
 	{
 		gpak_close(pak);
@@ -255,6 +257,22 @@ gpak_t* gpak_open(const char* _path, int _mode)
 			return NULL;
 		}
 	}
+	else if (_mode & GPAK_MODE_UPDATE)
+	{
+		fseek(pak->stream_, 0, SEEK_SET);
+
+		size_t res = _freadb(&pak->header_, sizeof(pak_header_t), 1ull, pak->stream_);
+		if (_pak_validate_header(pak) != GPAK_ERROR_OK || res != sizeof(pak_header_t))
+		{
+			gpak_close(pak);
+			return NULL;
+		}
+
+		_gpak_parse_dictionary(pak);
+		_gpak_parse_file_tree(pak);
+
+		fseek(pak->stream_, 0, SEEK_END);
+	}
 	else if (_mode & GPAK_MODE_READ_ONLY)
 	{
 		size_t res = _freadb(&pak->header_, sizeof(pak_header_t), 1ull, pak->stream_);
@@ -281,10 +299,11 @@ int gpak_close(gpak_t* _pak)
 
 			if ((_pak->mode_ & GPAK_MODE_CREATE) || (_pak->mode_ & GPAK_MODE_UPDATE))
 			{
-				if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE);
-				else if ((_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4) || (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST))
-					_gpak_compressor_generate_dictionary(_pak);
-				else;
+				if (_pak->mode_ & GPAK_MODE_CREATE)
+				{
+					if ((_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4) || (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST))
+						_gpak_compressor_generate_dictionary(_pak);
+				}
 
 				_gpak_archivate_file_tree(_pak);
 			}
