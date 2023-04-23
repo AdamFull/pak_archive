@@ -16,7 +16,7 @@ ${SOURCES}
 
 if(BUILD_SHARED)
     add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -DGPAK_EXPORTS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DGPAK_EXPORTS -DGPAK_VERSION=1000)
 else()
     add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 endif()

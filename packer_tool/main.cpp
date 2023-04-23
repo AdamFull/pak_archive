@@ -191,8 +191,11 @@ int main(int argc, char** argv)
 
 	if (params.mode == GPAK_MODE_CREATE || params.mode == GPAK_MODE_UPDATE)
 	{
-		gpak_set_compression_algorithm(_pak, params.compression_mode);
-		gpak_set_compression_level(_pak, params.compression_level);
+		if (params.mode == GPAK_MODE_CREATE)
+		{
+			gpak_set_compression_algorithm(_pak, params.compression_mode);
+			gpak_set_compression_level(_pak, params.compression_level);
+		}
 
 		std::filesystem::path _first_entry{ params.srSource };
 
@@ -207,7 +210,6 @@ int main(int argc, char** argv)
 
 			if (entry.is_regular_file())
 				gpak_add_file(_pak, _srfullpath.c_str(), _srpath.c_str());
-				
 		}
 	}
 	else if (params.mode == GPAK_MODE_READ_ONLY)
