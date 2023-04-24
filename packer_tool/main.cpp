@@ -119,30 +119,30 @@ int main(int argc, char** argv)
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
 	gpak_t* _pak{ nullptr };
-	//InputParser args(argc, argv);
+	InputParser args(argc, argv);
 
-	const char* debug[] = { "packer_tool.exe", "-pack", "-src", "tmp/common", "-dst", "common.gpak", "-alg", "zst", "-lvl", "22" };
-	InputParser args(10, debug);
-
+	//const char* debug[] = { "packer_tool.exe", "-pack", "-src", "tmp/common", "-dst", "common.gpak", "-alg", "zst", "-lvl", "22" };
+	//InputParser args(10, debug);
+	//
 	//const char* debug[] = { "packer_tool.exe", "-unpack", "-src", "common.gpak", "-dst", "unpakced/common" };
 	//InputParser args(6, debug);
 
 	FTaskParams params;
 	
 
-	//if (args.exists("-h") || args.exists("-help") || argc < 2)
-	//{
-	//	std::cout
-	//		<< "[-pack] - run application in packing mode.\n"
-	//		<< "[-unpack] - run application in unpacking mode.\n"
-	//		<< "[-src] - In the packing mode, you need to pass the path to the folder that you want to pack.\n"
-	//		<< "In the unpacking mode, you need to specify the path to the archive packed with the same packer.\n"
-	//		<< "[-dst] - In the packing mode, you need to pass the path to the archive packed by the same packer.\n"
-	//		<< "In the unpacking mode, you need to specify the path to the folder into which you want to unpack.\n"
-	//		<< "[-alg] - Choice of compression algorithm. It can be deflate, lz4 or zst.\n"
-	//		<< "[-lvl] - For deflate and lz4 algorithms the maximum compression is 9, for zst the maximum compression is 22.\n";
-	//	return 0;
-	//}
+	if (args.exists("-h") || args.exists("-help") || argc < 2)
+	{
+		std::cout
+			<< "[-pack] - run application in packing mode.\n"
+			<< "[-unpack] - run application in unpacking mode.\n"
+			<< "[-src] - In the packing mode, you need to pass the path to the folder that you want to pack.\n"
+			<< "In the unpacking mode, you need to specify the path to the archive packed with the same packer.\n"
+			<< "[-dst] - In the packing mode, you need to pass the path to the archive packed by the same packer.\n"
+			<< "In the unpacking mode, you need to specify the path to the folder into which you want to unpack.\n"
+			<< "[-alg] - Choice of compression algorithm. It can be deflate, lz4 or zst.\n"
+			<< "[-lvl] - For deflate and lz4 algorithms the maximum compression is 9, for zst the maximum compression is 22.\n";
+		return 0;
+	}
 
 	if (args.exists("-src"))
 		params.srSource = args.get("-src").value();
