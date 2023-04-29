@@ -37,7 +37,7 @@ int get_num_threads()
 	GetSystemInfo(&sysinfo);
 	numThreads = sysinfo.dwNumberOfProcessors;
 #else
-	numThreads = get_nprocs();
+	numThreads = sysconf(_SC_THREAD_THREADS_MAX);
 #endif
 
 	return numThreads;

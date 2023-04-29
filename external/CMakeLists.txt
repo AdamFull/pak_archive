@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(gpak_externals)
 
-add_library(${PROJECT_NAME} gpakext.cpp)
+add_library(${PROJECT_NAME} STATIC gpakext.cpp)
 
 if(WIN32)
 add_subdirectory(libfmemopen)
