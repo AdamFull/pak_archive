@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(gpak_externals)
 
+find_package(zstd CONFIG REQUIRED)
+
 add_library(${PROJECT_NAME} STATIC gpakext.cpp)
 
 if(WIN32)
@@ -9,10 +11,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC libfmemopen)
 endif()
 
 find_package(ZLIB REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC ZLIB::ZLIB)
-
-add_subdirectory("lz4/build/cmake/")
-target_link_libraries(${PROJECT_NAME} PUBLIC  lz4_static)
-
-add_subdirectory("zstd/build/cmake/")
-target_link_libraries(${PROJECT_NAME} PUBLIC  libzstd_static)
+target_link_libraries(${PROJECT_NAME} 
+	PUBLIC ZLIB::ZLIB
+	PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+)

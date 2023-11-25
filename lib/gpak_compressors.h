@@ -84,31 +84,6 @@ extern "C" {
 	GPAK_API uint32_t _gpak_decompressor_inflate(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size);
 
 	/**
-	 * @brief Compresses the input file using the LZ4 algorithm.
-	 *
-	 * This function compresses the input file using the LZ4 algorithm and writes the compressed data to the output file.
-	 *
-	 * @param _pak A pointer to the gpak_t.
-	 * @param _infile A pointer to the input FILE.
-	 * @param _outfile A pointer to the output FILE.
-	 * @return The number of bytes written to the output file.
-	 */
-	GPAK_API uint32_t _gpak_compressor_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile);
-
-	/**
-	 * @brief Decompresses the input file using the LZ4 algorithm.
-	 *
-	 * This function decompresses the input file using the LZ4 algorithm and writes the decompressed data to the output file.
-	 *
-	 * @param _pak A pointer to the gpak_t.
-	 * @param _infile A pointer to the input FILE.
-	 * @param _outfile A pointer to the output FILE.
-	 * @param _read_size The number of bytes to read from the input file.
-	 * @return The number of bytes written to the output file.
-	 */
-	GPAK_API uint32_t _gpak_decompressor_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size);
-
-	/**
 	 * @brief Compresses the input file using the Zstandard (zstd) algorithm.
 	 * 
 	 * This function compresses the input file using the Zstandard (zstd) algorithm and writes the compressed data to the output file.

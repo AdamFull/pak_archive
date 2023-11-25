@@ -16,11 +16,6 @@
 // Zlib
 #include <zlib.h>
 
-// LZ4
-#include <lz4.h>
-#include <lz4file.h>
-#include <lz4hc.h>
-
 // Z-standard
 #include <zstd.h>
 #include <zdict.h>
@@ -225,117 +220,6 @@ end:
 	free(_bufferOut);
 	(void)inflateEnd(&strm);
 
-	return _crc32;
-}
-
-// TODO: add dictionary
-uint32_t _gpak_compressor_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile)
-{
-	LZ4F_errorCode_t ret = LZ4F_OK_NoError;
-	size_t len;
-	LZ4_writeFile_t* lz4fWrite;
-	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
-
-	fseek(_infile, 0, SEEK_END);
-	size_t _total_size = ftell(_infile);
-	fseek(_infile, 0, SEEK_SET);
-
-	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
-
-	LZ4F_preferences_t _preferences;
-	_preferences.frameInfo.blockSizeID = LZ4F_max4MB;
-	_preferences.frameInfo.blockMode = LZ4F_blockLinked;
-	_preferences.frameInfo.contentChecksumFlag = 0;
-	_preferences.frameInfo.frameType = LZ4F_frame;
-	_preferences.frameInfo.contentSize = 0;
-	_preferences.frameInfo.dictID = 0;
-	_preferences.frameInfo.blockChecksumFlag = 0;
-	_preferences.compressionLevel = _pak->header_.compression_level_;
-	_preferences.autoFlush = 1;
-	_preferences.favorDecSpeed = 1;
-
-	ret = LZ4F_writeOpen(&lz4fWrite, _outfile, &_preferences);
-	if (LZ4F_isError(ret))
-		return _gpak_make_error(_pak, GPAK_ERROR_LZ4_WRITE_OPEN);
-
-	size_t _total_readed = 0ull;
-	while (1)
-	{
-		len = _freadb(_bufferIn, 1, _DEFAULT_BLOCK_SIZE, _infile);
-		_total_readed += len;
-		_crc32 = crc32(_crc32, _bufferIn, len);
-		_gpak_pass_progress(_pak, _total_readed, _total_size, GPAK_STAGE_COMPRESSION);
-
-		if (ferror(_infile))
-		{
-			_gpak_make_error(_pak, GPAK_ERROR_READ);
-			goto end;
-		}
-
-		if (len == 0)
-			break;
-
-		ret = LZ4F_write(lz4fWrite, _bufferIn, len);
-		if (LZ4F_isError(ret))
-		{
-			_gpak_make_error(_pak, GPAK_ERROR_LZ4_WRITE);
-			goto end;
-		}
-	}
-
-end:
-	free(_bufferIn);
-	if (LZ4F_isError(LZ4F_writeClose(lz4fWrite)))
-		return _gpak_make_error(_pak, GPAK_ERROR_LZ4_WRITE_CLOSE);
-	return _crc32;
-}
-
-uint32_t _gpak_decompressor_lz4(gpak_t* _pak, FILE* _infile, FILE* _outfile, size_t _read_size)
-{
-	LZ4F_errorCode_t ret = LZ4F_OK_NoError;
-	LZ4_readFile_t* lz4fRead;
-	char* _bufferIn = (char*)malloc(_DEFAULT_BLOCK_SIZE);
-
-	uint32_t _crc32 = crc32(0L, Z_NULL, 0);
-
-	ret = LZ4F_readOpen(&lz4fRead, _infile);
-	if (LZ4F_isError(ret))
-		return _gpak_make_error(_pak, GPAK_ERROR_LZ4_READ_OPEN);
-
-	size_t bytesReaded = 0;
-	size_t nextBlockSize = _DEFAULT_BLOCK_SIZE;
-
-	while (bytesReaded < _read_size)
-	{
-		size_t bytes_to_read = (_read_size - bytesReaded) < _DEFAULT_BLOCK_SIZE ? (_read_size - bytesReaded) : _DEFAULT_BLOCK_SIZE;
-
-		ret = LZ4F_read(lz4fRead, _bufferIn, _DEFAULT_BLOCK_SIZE);
-		if (LZ4F_isError(ret))
-		{
-			_gpak_make_error(_pak, GPAK_ERROR_LZ4_READ);
-			goto out;
-		}
-
-		if (ret == 0)
-			break;
-
-		bytesReaded += ret;
-		_gpak_pass_progress(_pak, bytesReaded, _read_size, GPAK_STAGE_DECOMPRESSION);
-
-		_crc32 = crc32(_crc32, _bufferIn, ret);
-
-		if (_fwriteb(_bufferIn, 1, ret, _outfile) != ret)
-		{
-			_gpak_make_error(_pak, GPAK_ERROR_WRITE);
-			goto out;
-		}
-	}
-
-out:
-	free(_bufferIn);
-	if (LZ4F_isError(LZ4F_readClose(lz4fRead)))
-		return _gpak_make_error(_pak, GPAK_ERROR_LZ4_READ_CLOSE);
-	
 	return _crc32;
 }
 

@@ -148,8 +148,6 @@ int _gpak_archivate_file_tree(gpak_t* _pak)
 			uint32_t _crc32 = 0u;
 			if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)
 				_crc32 = _gpak_compressor_deflate(_pak, _infile, _pak->stream_);
-			else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4)
-				_crc32 = _gpak_compressor_lz4(_pak, _infile, _pak->stream_);
 			else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST)
 				_crc32 = _gpak_compressor_zstd(_pak, _infile, _pak->stream_);
 			else
@@ -301,7 +299,7 @@ int gpak_close(gpak_t* _pak)
 			{
 				if (_pak->mode_ & GPAK_MODE_CREATE)
 				{
-					if ((_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4) || (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST))
+					if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST)
 						_gpak_compressor_generate_dictionary(_pak);
 				}
 
@@ -413,8 +411,6 @@ gpak_file_t* gpak_fopen(gpak_t* _pak, const char* _path)
 
 	if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_DEFLATE)
 		mfile->crc32_ = _gpak_decompressor_inflate(_pak, _pak->stream_, mfile->stream_, compressed_size);
-	else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_LZ4)
-		mfile->crc32_ = _gpak_decompressor_lz4(_pak, _pak->stream_, mfile->stream_, compressed_size);
 	else if (_pak->header_.compression_ & GPAK_HEADER_COMPRESSION_ZST)
 		mfile->crc32_ = _gpak_decompressor_zstd(_pak, _pak->stream_, mfile->stream_, compressed_size);
 	else
