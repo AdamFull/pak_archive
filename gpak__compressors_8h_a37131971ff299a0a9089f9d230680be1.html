@@ -74,11 +74,9 @@ $(function() {
         <table>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a0e71e0ce8c134e99ed32e378271dc2b1.html#a0e71e0ce8c134e99ed32e378271dc2b1">_gpak_compressor_deflate</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_aa524ac601c498d60f28b0edade120f6c.html#aa524ac601c498d60f28b0edade120f6c">_gpak_compressor_generate_dictionary</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_aa6473cd2e982edba7a3ddeae207cfd44.html#aa6473cd2e982edba7a3ddeae207cfd44">_gpak_compressor_lz4</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a2b5eab12e10ca3ea239293308e34092a.html#a2b5eab12e10ca3ea239293308e34092a">_gpak_compressor_none</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_ae4f294d01064148ab1a7961424399380.html#ae4f294d01064148ab1a7961424399380">_gpak_compressor_zstd</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a7722d30b2d03b0973fcc117ac0f735da.html#a7722d30b2d03b0973fcc117ac0f735da">_gpak_decompressor_inflate</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a99e7562923c0a6afa78348d4ed17961c.html#a99e7562923c0a6afa78348d4ed17961c">_gpak_decompressor_lz4</a></td></tr>
           <tr><td class="navtabHL"><a class="navtab" href="gpak__compressors_8h_a37131971ff299a0a9089f9d230680be1.html#a37131971ff299a0a9089f9d230680be1">_gpak_decompressor_none</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a96e8c54fa56d23af7c4db4f08b45c273.html#a96e8c54fa56d23af7c4db4f08b45c273">_gpak_decompressor_zstd</a></td></tr>
         </table>
@@ -135,38 +133,38 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of bytes written to the output file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00072">72</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">size_t</span> bytesReaded = 0ull;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">size_t</span> nextBlockSize = _DEFAULT_BLOCK_SIZE;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
+<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00067">67</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">size_t</span> bytesReaded = 0ull;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">size_t</span> nextBlockSize = _DEFAULT_BLOCK_SIZE;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">do</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">size_t</span> _readed = _freadb(_bufferIn, 1ull, nextBlockSize, _infile);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        _crc32 = crc32(_crc32, _bufferIn, _readed);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">do</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordtype">size_t</span> _readed = _freadb(_bufferIn, 1ull, nextBlockSize, _infile);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        _crc32 = crc32(_crc32, _bufferIn, _readed);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        _fwriteb(_bufferIn, 1ull, _readed, _outfile);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        bytesReaded += _readed;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        _gpak_pass_progress(_pak, bytesReaded, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">if</span> (_read_size - bytesReaded &lt; nextBlockSize)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            nextBlockSize = _read_size - bytesReaded;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    } <span class="keywordflow">while</span> (bytesReaded != _read_size);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        _fwriteb(_bufferIn, 1ull, _readed, _outfile);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        bytesReaded += _readed;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        _gpak_pass_progress(_pak, bytesReaded, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">if</span> (_read_size - bytesReaded &lt; nextBlockSize)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            nextBlockSize = _read_size - bytesReaded;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    } <span class="keywordflow">while</span> (bytesReaded != _read_size);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span> (bytesReaded != _read_size)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">return</span> _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb">GPAK_ERROR_READ</a>);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    free(_bufferIn);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">if</span> (bytesReaded != _read_size)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">return</span> _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb">GPAK_ERROR_READ</a>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    free(_bufferIn);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
-<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb">GPAK_ERROR_READ</a></div><div class="ttdeci">@ GPAK_ERROR_READ</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00163">gpak_data.h:163</a></div></div>
-<div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_DECOMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00229">gpak_data.h:228</a></div></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
+<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13ab1d09b4238242a83077e21c25607a1fb">GPAK_ERROR_READ</a></div><div class="ttdeci">@ GPAK_ERROR_READ</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00162">gpak_data.h:162</a></div></div>
+<div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_DECOMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00228">gpak_data.h:227</a></div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="gpak_8c_source.html#l00391">gpak_fopen()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gpak_8c_source.html#l00389">gpak_fopen()</a>.</p>
 
 </div>
 </div>

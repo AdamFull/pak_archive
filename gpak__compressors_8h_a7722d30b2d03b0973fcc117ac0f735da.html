@@ -74,11 +74,9 @@ $(function() {
         <table>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a0e71e0ce8c134e99ed32e378271dc2b1.html#a0e71e0ce8c134e99ed32e378271dc2b1">_gpak_compressor_deflate</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_aa524ac601c498d60f28b0edade120f6c.html#aa524ac601c498d60f28b0edade120f6c">_gpak_compressor_generate_dictionary</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_aa6473cd2e982edba7a3ddeae207cfd44.html#aa6473cd2e982edba7a3ddeae207cfd44">_gpak_compressor_lz4</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a2b5eab12e10ca3ea239293308e34092a.html#a2b5eab12e10ca3ea239293308e34092a">_gpak_compressor_none</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_ae4f294d01064148ab1a7961424399380.html#ae4f294d01064148ab1a7961424399380">_gpak_compressor_zstd</a></td></tr>
           <tr><td class="navtabHL"><a class="navtab" href="gpak__compressors_8h_a7722d30b2d03b0973fcc117ac0f735da.html#a7722d30b2d03b0973fcc117ac0f735da">_gpak_decompressor_inflate</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a99e7562923c0a6afa78348d4ed17961c.html#a99e7562923c0a6afa78348d4ed17961c">_gpak_decompressor_lz4</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a37131971ff299a0a9089f9d230680be1.html#a37131971ff299a0a9089f9d230680be1">_gpak_decompressor_none</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="gpak__compressors_8h_a96e8c54fa56d23af7c4db4f08b45c273.html#a96e8c54fa56d23af7c4db4f08b45c273">_gpak_decompressor_zstd</a></td></tr>
         </table>
@@ -135,74 +133,74 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of bytes written to the output file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00167">167</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;{</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    z_stream strm;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    strm.zalloc = Z_NULL;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    strm.zfree = Z_NULL;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    strm.opaque = Z_NULL;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">char</span>* _bufferOut = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordtype">int</span> ret = inflateInit(&amp;strm);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordflow">if</span> (ret != Z_OK)</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keywordflow">return</span> _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01">GPAK_ERROR_INFLATE_INIT</a>);</div>
+<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00162">162</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;{</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    z_stream strm;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    strm.zalloc = Z_NULL;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    strm.zfree = Z_NULL;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    strm.opaque = Z_NULL;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">char</span>* _bufferOut = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordtype">int</span> ret = inflateInit(&amp;strm);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordflow">if</span> (ret != Z_OK)</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keywordflow">return</span> _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01">GPAK_ERROR_INFLATE_INIT</a>);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">unsigned</span> have;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordtype">size_t</span> total_read = 0ull;</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">unsigned</span> have;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordtype">size_t</span> total_read = 0ull;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">do</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    {</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordtype">size_t</span> bytes_to_read = _read_size - total_read &lt; _DEFAULT_BLOCK_SIZE ? _read_size - total_read : _DEFAULT_BLOCK_SIZE;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        strm.avail_in = _freadb(_bufferIn, 1, bytes_to_read, _infile);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        total_read += strm.avail_in;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        _gpak_pass_progress(_pak, total_read, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        strm.next_in = _bufferIn;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">do</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        {</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            strm.avail_out = _DEFAULT_BLOCK_SIZE;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            strm.next_out = _bufferOut;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;            ret = inflate(&amp;strm, Z_NO_FLUSH);</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            assert(ret != Z_STREAM_ERROR);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            <span class="keywordflow">switch</span> (ret) {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">case</span> Z_NEED_DICT:</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            <span class="keywordflow">case</span> Z_DATA_ERROR:</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            <span class="keywordflow">case</span> Z_MEM_ERROR:</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;                <span class="keywordflow">goto</span> end;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            }</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            have = _DEFAULT_BLOCK_SIZE - strm.avail_out;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            _crc32 = crc32(_crc32, _bufferOut, have);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            <span class="keywordflow">if</span> (_fwriteb(_bufferOut, 1, have, _outfile) != have || ferror(_outfile))</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            {</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c">GPAK_ERROR_INFLATE_FAILED</a>);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                <span class="keywordflow">goto</span> end;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            }</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        } <span class="keywordflow">while</span> (strm.avail_out == 0);</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    } <span class="keywordflow">while</span> (ret != Z_STREAM_END);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordflow">do</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordtype">size_t</span> bytes_to_read = _read_size - total_read &lt; _DEFAULT_BLOCK_SIZE ? _read_size - total_read : _DEFAULT_BLOCK_SIZE;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        strm.avail_in = _freadb(_bufferIn, 1, bytes_to_read, _infile);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        total_read += strm.avail_in;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        _gpak_pass_progress(_pak, total_read, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        strm.next_in = _bufferIn;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">do</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            strm.avail_out = _DEFAULT_BLOCK_SIZE;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            strm.next_out = _bufferOut;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            ret = inflate(&amp;strm, Z_NO_FLUSH);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            assert(ret != Z_STREAM_ERROR);</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="keywordflow">switch</span> (ret) {</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">case</span> Z_NEED_DICT:</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;            <span class="keywordflow">case</span> Z_DATA_ERROR:</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="keywordflow">case</span> Z_MEM_ERROR:</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                <span class="keywordflow">goto</span> end;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            }</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            have = _DEFAULT_BLOCK_SIZE - strm.avail_out;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            _crc32 = crc32(_crc32, _bufferOut, have);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;            <span class="keywordflow">if</span> (_fwriteb(_bufferOut, 1, have, _outfile) != have || ferror(_outfile))</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            {</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;                _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c">GPAK_ERROR_INFLATE_FAILED</a>);</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                <span class="keywordflow">goto</span> end;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            }</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        } <span class="keywordflow">while</span> (strm.avail_out == 0);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    } <span class="keywordflow">while</span> (ret != Z_STREAM_END);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;end:</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    free(_bufferIn);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    free(_bufferOut);</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    (void)inflateEnd(&amp;strm);</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;end:</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    free(_bufferIn);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    free(_bufferOut);</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    (void)inflateEnd(&amp;strm);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;}</div>
-<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c">GPAK_ERROR_INFLATE_FAILED</a></div><div class="ttdeci">@ GPAK_ERROR_INFLATE_FAILED</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00170">gpak_data.h:170</a></div></div>
-<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01">GPAK_ERROR_INFLATE_INIT</a></div><div class="ttdeci">@ GPAK_ERROR_INFLATE_INIT</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00169">gpak_data.h:169</a></div></div>
-<div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_DECOMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00229">gpak_data.h:228</a></div></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;}</div>
+<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a0c9ec0a9c1a09c0eb69d8966dcdb399c">GPAK_ERROR_INFLATE_FAILED</a></div><div class="ttdeci">@ GPAK_ERROR_INFLATE_FAILED</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00169">gpak_data.h:169</a></div></div>
+<div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a2f3db06406cb637ca5c5eaa36ec09b01">GPAK_ERROR_INFLATE_INIT</a></div><div class="ttdeci">@ GPAK_ERROR_INFLATE_INIT</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00168">gpak_data.h:168</a></div></div>
+<div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_DECOMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00228">gpak_data.h:227</a></div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="gpak_8c_source.html#l00391">gpak_fopen()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gpak_8c_source.html#l00389">gpak_fopen()</a>.</p>
 
 </div>
 </div>
