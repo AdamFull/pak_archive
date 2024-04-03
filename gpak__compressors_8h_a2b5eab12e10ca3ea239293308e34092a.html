@@ -126,30 +126,30 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of bytes written to the output file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00042">42</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">size_t</span> _readed = 0ull;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    fseek(_infile, 0, SEEK_END);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">size_t</span> _total_size = ftell(_infile);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    fseek(_infile, 0, SEEK_SET);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">size_t</span> bytes_readed = 0ull;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">do</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        _readed = _freadb(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        _crc32 = crc32(_crc32, _bufferIn, _readed);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        bytes_readed += _readed;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        _gpak_pass_progress(_pak, bytes_readed, _total_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        _fwriteb(_bufferIn, 1ull, _readed, _outfile);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    } <span class="keywordflow">while</span> (_readed);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    free(_bufferIn);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00045">45</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">char</span>* _bufferIn = (<span class="keywordtype">char</span>*)malloc(_DEFAULT_BLOCK_SIZE);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">size_t</span> _readed = 0ull;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    fseek(_infile, 0, SEEK_END);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">size_t</span> _total_size = ftell(_infile);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    fseek(_infile, 0, SEEK_SET);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">size_t</span> bytes_readed = 0ull;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">do</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        _readed = _freadb(_bufferIn, 1ull, _DEFAULT_BLOCK_SIZE, _infile);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        _crc32 = crc32(_crc32, _bufferIn, _readed);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        bytes_readed += _readed;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        _gpak_pass_progress(_pak, bytes_readed, _total_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        _fwriteb(_bufferIn, 1ull, _readed, _outfile);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    } <span class="keywordflow">while</span> (_readed);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    free(_bufferIn);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
 <div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_COMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00226">gpak_data.h:226</a></div></div>
 </div><!-- fragment -->
 </div>

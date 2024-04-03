@@ -126,69 +126,69 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of bytes written to the output file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00227">227</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;{</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffInSize = ZSTD_CStreamInSize();</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffIn = malloc(buffInSize);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffOutSize = ZSTD_CStreamOutSize();</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffOut = malloc(buffOutSize);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    fseek(_infile, 0, SEEK_END);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordtype">size_t</span> _total_size = ftell(_infile);</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    fseek(_infile, 0, SEEK_SET);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="comment">/* Create the context. */</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    ZSTD_CCtx* <span class="keyword">const</span> cctx = ZSTD_createCCtx();</div>
+<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00230">230</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;{</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffInSize = ZSTD_CStreamInSize();</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffIn = malloc(buffInSize);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffOutSize = ZSTD_CStreamOutSize();</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffOut = malloc(buffOutSize);</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    fseek(_infile, 0, SEEK_END);</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    <span class="keywordtype">size_t</span> _total_size = ftell(_infile);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    fseek(_infile, 0, SEEK_SET);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    uint32_t thread_count = get_num_threads();</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="comment">/* Set parameters. */</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aa709bc91ae52b6a48063e910f1b28364.html#aa709bc91ae52b6a48063e910f1b28364">compression_level_</a>);</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_checksumFlag, 1);</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_enableLongDistanceMatching, 1);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, 27);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, thread_count);</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_jobSize, buffInSize * thread_count);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    </div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordflow">if</span> (_pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a> &amp;&amp; _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a> &gt; 0)</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        ZSTD_CCtx_loadDictionary(cctx, _pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a>, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a>);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordtype">size_t</span> _total_readed = 0ull;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> toRead = buffInSize;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">for</span> (;;)</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    {</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keywordtype">size_t</span> read = _freadb(buffIn, 1, toRead, _infile);</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        _total_readed += read;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        _crc32 = crc32(_crc32, buffIn, read);</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        _gpak_pass_progress(_pak, _total_readed, _total_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a>);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        <span class="keywordtype">int</span> <span class="keyword">const</span> lastChunk = (read &lt; toRead);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        ZSTD_EndDirective <span class="keyword">const</span> mode = lastChunk ? ZSTD_e_end : ZSTD_e_continue;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="comment">/* Create the context. */</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    ZSTD_CCtx* <span class="keyword">const</span> cctx = ZSTD_createCCtx();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    uint32_t thread_count = get_num_threads();</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="comment">/* Set parameters. */</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aa709bc91ae52b6a48063e910f1b28364.html#aa709bc91ae52b6a48063e910f1b28364">compression_level_</a>);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_checksumFlag, 1);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_enableLongDistanceMatching, 1);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, 27);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_nbWorkers, thread_count);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    ZSTD_CCtx_setParameter(cctx, ZSTD_c_jobSize, buffInSize * thread_count);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    </div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordflow">if</span> (_pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a> &amp;&amp; _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a> &gt; 0)</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        ZSTD_CCtx_loadDictionary(cctx, _pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a>, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a>);</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordtype">size_t</span> _total_readed = 0ull;</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> toRead = buffInSize;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordflow">for</span> (;;)</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    {</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keywordtype">size_t</span> read = _freadb(buffIn, 1, toRead, _infile);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        _total_readed += read;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        _crc32 = crc32(_crc32, buffIn, read);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        _gpak_pass_progress(_pak, _total_readed, _total_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a>);</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        ZSTD_inBuffer input = { buffIn, read, 0 };</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="keywordtype">int</span> finished;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordflow">do</span></div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        {</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="keywordtype">size_t</span> <span class="keyword">const</span> remaining = ZSTD_compressStream2(cctx, &amp;output, &amp;input, mode);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <span class="comment">//CHECK_ZSTD(remaining);</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            _fwriteb(buffOut, 1, output.pos, _outfile);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            finished = lastChunk ? (remaining == 0) : (input.pos == input.size);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        } <span class="keywordflow">while</span> (!finished);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        assert(input.pos == input.size &amp;&amp; <span class="stringliteral">&quot;Impossible: zstd only returns 0 when the input is completely consumed!&quot;</span>);</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="keywordflow">if</span> (lastChunk)</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    }</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    ZSTD_freeCCtx(cctx);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    free(buffIn);</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    free(buffOut);</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        <span class="keywordtype">int</span> <span class="keyword">const</span> lastChunk = (read &lt; toRead);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        ZSTD_EndDirective <span class="keyword">const</span> mode = lastChunk ? ZSTD_e_end : ZSTD_e_continue;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        ZSTD_inBuffer input = { buffIn, read, 0 };</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;        <span class="keywordtype">int</span> finished;</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        <span class="keywordflow">do</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            <span class="keywordtype">size_t</span> <span class="keyword">const</span> remaining = ZSTD_compressStream2(cctx, &amp;output, &amp;input, mode);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            <span class="comment">//CHECK_ZSTD(remaining);</span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            _fwriteb(buffOut, 1, output.pos, _outfile);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            finished = lastChunk ? (remaining == 0) : (input.pos == input.size);</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        } <span class="keywordflow">while</span> (!finished);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        assert(input.pos == input.size &amp;&amp; <span class="stringliteral">&quot;Impossible: zstd only returns 0 when the input is completely consumed!&quot;</span>);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <span class="keywordflow">if</span> (lastChunk)</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    }</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    ZSTD_freeCCtx(cctx);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    free(buffIn);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    free(buffOut);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;}</div>
 <div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93ca43a71eafac14563d553621428340a7e7">GPAK_STAGE_COMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_COMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00226">gpak_data.h:226</a></div></div>
 <div class="ttc" id="astructgpak__header_aa709bc91ae52b6a48063e910f1b28364_html_aa709bc91ae52b6a48063e910f1b28364"><div class="ttname"><a href="structgpak__header_aa709bc91ae52b6a48063e910f1b28364.html#aa709bc91ae52b6a48063e910f1b28364">gpak_header::compression_level_</a></div><div class="ttdeci">char compression_level_</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00114">gpak_data.h:114</a></div></div>
 <div class="ttc" id="astructgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c_html_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c"><div class="ttname"><a href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">gpak_header::dictionary_size_</a></div><div class="ttdeci">uint32_t dictionary_size_</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00116">gpak_data.h:116</a></div></div>

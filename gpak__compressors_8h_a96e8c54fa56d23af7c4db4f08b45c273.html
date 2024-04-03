@@ -132,72 +132,72 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of bytes written to the output file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00291">291</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;{</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffInSize = ZSTD_DStreamInSize();</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffIn = malloc(buffInSize);</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffOutSize = ZSTD_DStreamOutSize();</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffOut = malloc(buffOutSize);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    ZSTD_DCtx* <span class="keyword">const</span> dctx = ZSTD_createDCtx();</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    assert(dctx != NULL &amp;&amp; <span class="stringliteral">&quot;ZSTD_createDCtx() failed!&quot;</span>);</div>
+<p class="definition">Definition at line <a class="el" href="gpak__compressors_8c_source.html#l00294">294</a> of file <a class="el" href="gpak__compressors_8c_source.html">gpak_compressors.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;{</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffInSize = ZSTD_DStreamInSize();</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffIn = malloc(buffInSize);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keywordtype">size_t</span> <span class="keyword">const</span> buffOutSize = ZSTD_DStreamOutSize();</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="keywordtype">void</span>* <span class="keyword">const</span> buffOut = malloc(buffOutSize);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    uint32_t _crc32 = crc32(0L, Z_NULL, 0);</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">if</span> (_pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a> &amp;&amp; _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a> &gt; 0)</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        ZSTD_DCtx_loadDictionary(dctx, _pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a>, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a>);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    ZSTD_DCtx* <span class="keyword">const</span> dctx = ZSTD_createDCtx();</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    assert(dctx != NULL &amp;&amp; <span class="stringliteral">&quot;ZSTD_createDCtx() failed!&quot;</span>);</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordtype">size_t</span> bytesRead = 0;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordtype">size_t</span> lastRet = 0;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keywordtype">int</span> isEmpty = 1;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">while</span> (bytesRead &lt; _read_size)</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    {</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        <span class="keywordtype">size_t</span> <span class="keyword">const</span> toRead = (bytesRead + buffInSize &lt;= _read_size) ? buffInSize : (_read_size - bytesRead);</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="keywordtype">size_t</span> read = _freadb(buffIn, 1, toRead, _infile);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="keywordflow">if</span> (!read)</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        {</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        }</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        bytesRead += read;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        _gpak_pass_progress(_pak, bytesRead, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        isEmpty = 0;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        ZSTD_inBuffer input = { buffIn, read, 0 };</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">while</span> (input.pos &lt; input.size)</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        {</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            <span class="keywordtype">size_t</span> <span class="keyword">const</span> ret = ZSTD_decompressStream(dctx, &amp;output, &amp;input);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;            _crc32 = crc32(_crc32, buffOut, output.pos);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            _fwriteb(buffOut, 1, output.pos, _outfile);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            lastRet = ret;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        }</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    }</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordflow">if</span> (isEmpty)</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    {</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a88b899eef126e6f1b72073d11bd8ea96">GPAK_ERROR_EMPTY_INPUT</a>);</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        <span class="keywordflow">goto</span> clear;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    }</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keywordflow">if</span> (lastRet != 0)</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    {</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13adbcd8fe5df0394511914bf81be565eb7">GPAK_ERROR_EOF_BEFORE_EOS</a>);</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        <span class="keywordflow">goto</span> clear;</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    }</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;clear:</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    ZSTD_freeDCtx(dctx);</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    free(buffIn);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    free(buffOut);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;}</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">if</span> (_pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a> &amp;&amp; _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a> &gt; 0)</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        ZSTD_DCtx_loadDictionary(dctx, _pak-&gt;<a class="code" href="structgpak_a19e260a0da1343048f396eba3a6d9fbc.html#a19e260a0da1343048f396eba3a6d9fbc">dictionary_</a>, _pak-&gt;<a class="code" href="structgpak_acff1317119bfba3f869c9ba724549b91.html#acff1317119bfba3f869c9ba724549b91">header_</a>.<a class="code" href="structgpak__header_aac8c4d3a05fa6a4f7f5d3b7f0894fb5c.html#aac8c4d3a05fa6a4f7f5d3b7f0894fb5c">dictionary_size_</a>);</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="keywordtype">size_t</span> bytesRead = 0;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordtype">size_t</span> lastRet = 0;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keywordtype">int</span> isEmpty = 1;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <span class="keywordflow">while</span> (bytesRead &lt; _read_size)</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    {</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="keywordtype">size_t</span> <span class="keyword">const</span> toRead = (bytesRead + buffInSize &lt;= _read_size) ? buffInSize : (_read_size - bytesRead);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        <span class="keywordtype">size_t</span> read = _freadb(buffIn, 1, toRead, _infile);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="keywordflow">if</span> (!read)</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        {</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        }</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        bytesRead += read;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        _gpak_pass_progress(_pak, bytesRead, _read_size, <a class="code" href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a>);</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        isEmpty = 0;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        ZSTD_inBuffer input = { buffIn, read, 0 };</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="keywordflow">while</span> (input.pos &lt; input.size)</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        {</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;            ZSTD_outBuffer output = { buffOut, buffOutSize, 0 };</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            <span class="keywordtype">size_t</span> <span class="keyword">const</span> ret = ZSTD_decompressStream(dctx, &amp;output, &amp;input);</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            _crc32 = crc32(_crc32, buffOut, output.pos);</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            _fwriteb(buffOut, 1, output.pos, _outfile);</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            lastRet = ret;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    }</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">if</span> (isEmpty)</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    {</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a88b899eef126e6f1b72073d11bd8ea96">GPAK_ERROR_EMPTY_INPUT</a>);</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordflow">goto</span> clear;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    }</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordflow">if</span> (lastRet != 0)</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    {</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        _gpak_make_error(_pak, <a class="code" href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13adbcd8fe5df0394511914bf81be565eb7">GPAK_ERROR_EOF_BEFORE_EOS</a>);</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <span class="keywordflow">goto</span> clear;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;clear:</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    ZSTD_freeDCtx(dctx);</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    free(buffIn);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    free(buffOut);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160; </div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordflow">return</span> _crc32;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;}</div>
 <div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13a88b899eef126e6f1b72073d11bd8ea96"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13a88b899eef126e6f1b72073d11bd8ea96">GPAK_ERROR_EMPTY_INPUT</a></div><div class="ttdeci">@ GPAK_ERROR_EMPTY_INPUT</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00181">gpak_data.h:181</a></div></div>
 <div class="ttc" id="agpak__data_8h_a5ea02fd12dde665eb053054b2e587a13_html_a5ea02fd12dde665eb053054b2e587a13adbcd8fe5df0394511914bf81be565eb7"><div class="ttname"><a href="gpak__data_8h_a5ea02fd12dde665eb053054b2e587a13.html#a5ea02fd12dde665eb053054b2e587a13adbcd8fe5df0394511914bf81be565eb7">GPAK_ERROR_EOF_BEFORE_EOS</a></div><div class="ttdeci">@ GPAK_ERROR_EOF_BEFORE_EOS</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00182">gpak_data.h:182</a></div></div>
 <div class="ttc" id="agpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c_html_a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58"><div class="ttname"><a href="gpak__data_8h_a94ed01832de0288d7b6e1db31fd2a93c.html#a94ed01832de0288d7b6e1db31fd2a93caac39c342ccc0eb6f37c1b6b053201d58">GPAK_STAGE_DECOMPRESSION</a></div><div class="ttdeci">@ GPAK_STAGE_DECOMPRESSION</div><div class="ttdef"><b>Definition:</b> <a href="gpak__data_8h_source.html#l00228">gpak_data.h:227</a></div></div>
