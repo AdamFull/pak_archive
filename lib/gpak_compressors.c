@@ -7,10 +7,7 @@
 #include <assert.h>
 
 #ifdef _WIN32
-#define NOMINMAX
 #include <windows.h>
-#undef min
-#undef max
 #else
 #include <unistd.h>
 #include <sys/sysinfo.h>

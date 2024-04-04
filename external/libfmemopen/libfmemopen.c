@@ -1,7 +1,4 @@
-#define NOMINMAX
 #include <windows.h>
-#undef min
-#undef max
 
 #include <share.h>
 #include <io.h>
